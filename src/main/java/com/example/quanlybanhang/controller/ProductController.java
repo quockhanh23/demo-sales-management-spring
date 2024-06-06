@@ -1,5 +1,6 @@
 package com.example.quanlybanhang.controller;
 
+import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
@@ -8,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,11 +96,20 @@ public class ProductController {
     }
 
     // Xem tất cả sản phẩm có trạng thái là hoạt động
+    // Có thêm ảnh
     @GetMapping("")
     public ResponseEntity<?> getAllProduct() {
         try {
             List<Product> productList = productService.getAllProduct();
-            return new ResponseEntity<>(productList, HttpStatus.OK);
+            List<ProductDTO> productDTOS = new ArrayList<>();
+            for (Product product : productList) {
+                ProductDTO productDTO = new ProductDTO();
+                byte[] imageBytes = Files.readAllBytes(Paths.get(product.getImage()));
+                productDTO.setImage(imageBytes);
+                productDTO.setName(product.getProductName());
+                productDTOS.add(productDTO);
+            }
+            return new ResponseEntity<>(productDTOS, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

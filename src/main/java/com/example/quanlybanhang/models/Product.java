@@ -26,4 +26,6 @@ public class Product {
     private String status;
     // Đã xóa
     private boolean isDelete;
+
+    private String image;
 }
