@@ -4,7 +4,7 @@ import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,19 +18,15 @@ import java.util.Optional;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
-
-    // Tạo mới sản phẩm
     @PostMapping("/create-product")
     public ResponseEntity<?> createProduct(@RequestBody Product product, @RequestParam Long idUser) {
         try {
-            // Nếu giá trị của biến = null mà sử dụng equals() đứng trước sẽ bị lỗi
             userService.checkRoleAdmin(idUser);
             productService.validateProduct(product);
             product.setStatus("Hoạt động");
@@ -41,9 +37,10 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    // Cập nhật trạng thái sản phẩm
     @DeleteMapping("/update-status-product")
-    public ResponseEntity<?> updateProduct(@RequestParam String status, @RequestParam Long idProduct, @RequestParam Long idUser) {
+    public ResponseEntity<?> updateStatusProduct(@RequestParam String status,
+                                                 @RequestParam Long idProduct,
+                                                 @RequestParam Long idUser) {
         try {
             userService.checkRoleAdmin(idUser);
             Optional<Product> productOptional = productService.findById(idProduct);
@@ -58,9 +55,10 @@ public class ProductController {
         }
     }
 
-    // Cập nhật thông tin sản phẩm
     @PutMapping("/update-product")
-    public ResponseEntity<?> updateProduct(@RequestBody Product product, @RequestParam Long idProduct, @RequestParam Long idUser) {
+    public ResponseEntity<?> updateInformationProduct(@RequestBody Product product,
+                                                      @RequestParam Long idProduct,
+                                                      @RequestParam Long idUser) {
         try {
             userService.checkRoleAdmin(idUser);
             Optional<Product> productOptional = productService.findById(idProduct);
@@ -78,9 +76,8 @@ public class ProductController {
         }
     }
 
-    // Ẩn sản phẩm
     @DeleteMapping("/delete-product")
-    public ResponseEntity<?> delete(@RequestParam Long idProduct, @RequestParam Long idUser) {
+    public ResponseEntity<?> deleteProduct(@RequestParam Long idProduct, @RequestParam Long idUser) {
         try {
             userService.checkRoleAdmin(idUser);
             Optional<Product> productOptional = productService.findById(idProduct);
@@ -95,8 +92,6 @@ public class ProductController {
         }
     }
 
-    // Xem tất cả sản phẩm có trạng thái là hoạt động
-    // Có thêm ảnh
     @GetMapping("")
     public ResponseEntity<?> getAllProduct() {
         try {

@@ -3,7 +3,7 @@ package com.example.quanlybanhang.controller;
 import com.example.quanlybanhang.dto.UserDTO;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +13,11 @@ import java.util.Optional;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    // Đăng kí
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
@@ -30,19 +29,17 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    // Đổi trạng thái
     @GetMapping("/changeStatus")
     public ResponseEntity<?> changeStatus(@RequestParam Long idUser, @RequestParam String status) {
         try {
-            Optional<User> user = userService.findById(idUser);
-            user.get().setStatus(status);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            Optional<User> userOptional = userService.findById(idUser);
+            userOptional.ifPresent(user -> user.setStatus(status));
+            return new ResponseEntity<>(userOptional, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // Thông tin người dùng
     @GetMapping("/getInformation")
     public ResponseEntity<?> getInformation(@RequestParam Long idUser) {
         try {
@@ -53,7 +50,6 @@ public class UserController {
         }
     }
 
-    // Đăng nhập
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
@@ -65,7 +61,6 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // Quên mật khẩu
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody UserDTO user) {
         try {

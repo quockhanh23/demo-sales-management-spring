@@ -8,12 +8,11 @@ import lombok.Setter;
 
 import java.util.Date;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-// Người dùng
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +24,6 @@ public class User {
     private String phone;
     private String pin;
     private String status;
-    private String role; // Admin, Người mua, Người bán
-    private boolean buyer; // nếu = true là Người mua, nếu = false là Người bán
+    private String role;
+    private boolean buyer;
 }

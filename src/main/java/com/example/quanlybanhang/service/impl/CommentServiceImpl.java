@@ -8,7 +8,7 @@ import com.example.quanlybanhang.repository.CommentRepository;
 import com.example.quanlybanhang.service.CommentService;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,16 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ProductService productService;
+    private final CommentRepository commentRepository;
+    private final UserService userService;
+    private final ProductService productService;
 
     @Override
     public List<Comment> findAllCommentByUserId(Long idUser) {

@@ -3,17 +3,17 @@ package com.example.quanlybanhang.service.impl;
 import com.example.quanlybanhang.models.OrderProduct;
 import com.example.quanlybanhang.repository.OrderProductRepository;
 import com.example.quanlybanhang.service.OrderProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class OrderProductServiceImpl implements OrderProductService {
 
-    @Autowired
-    private OrderProductRepository orderProductRepository;
+    private final OrderProductRepository orderProductRepository;
 
     @Override
     public List<OrderProduct> findAll() {

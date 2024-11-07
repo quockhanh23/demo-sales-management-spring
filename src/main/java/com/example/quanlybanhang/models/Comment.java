@@ -8,12 +8,11 @@ import lombok.Setter;
 
 import java.util.Date;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-// Bình luận
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Comment {
 
     @Id

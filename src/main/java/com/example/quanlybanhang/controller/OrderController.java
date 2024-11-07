@@ -7,7 +7,7 @@ import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.service.OrderProductService;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,21 +20,17 @@ import java.util.Set;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final OrderProductService orderProductService;
+    private final ProductService productService;
 
-    @Autowired
-    private OrderProductService orderProductService;
-
-    @Autowired
-    private ProductService productService;
-
-    // Tạo mới đơn hàng
     @GetMapping("/order")
-    public ResponseEntity<?> update(@RequestParam(required = false) Long idOrder, @RequestParam Long idUser,
-                                    @RequestParam List<Long> listIdProduct) {
+    public ResponseEntity<?> createOrder(@RequestParam(required = false) Long idOrder,
+                                         @RequestParam Long idUser,
+                                         @RequestParam List<Long> listIdProduct) {
         try {
             Optional<User> userOptional = userService.findById(idUser);
             if (userOptional.isEmpty()) {
@@ -68,7 +64,8 @@ public class OrderController {
 
     // Đổi trạng thái đơn hàng
     @GetMapping("/changeStatus")
-    public ResponseEntity<?> changeStatus(@RequestParam String status, @RequestParam Long idOrderProduct,
+    public ResponseEntity<?> changeStatus(@RequestParam String status,
+                                          @RequestParam Long idOrderProduct,
                                           @RequestParam Long idUser) {
         try {
             Optional<OrderProduct> optionalOrderProduct = orderProductService.findById(idOrderProduct);

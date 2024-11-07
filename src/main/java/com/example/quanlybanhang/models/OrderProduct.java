@@ -9,12 +9,11 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.Set;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-// Đơn hàng
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class OrderProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

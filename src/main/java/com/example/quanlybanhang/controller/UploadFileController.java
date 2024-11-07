@@ -1,6 +1,7 @@
 package com.example.quanlybanhang.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import java.util.Date;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/uploads")
+@RequiredArgsConstructor
 public class UploadFileController {
 
     // Phải tạo thư mục lưu trữ trước

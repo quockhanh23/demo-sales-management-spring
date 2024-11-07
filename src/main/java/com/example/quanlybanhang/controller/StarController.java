@@ -3,7 +3,7 @@ package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.models.Star;
 import com.example.quanlybanhang.service.StarService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +13,11 @@ import java.util.List;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/stars")
+@RequiredArgsConstructor
 public class StarController {
 
-    @Autowired
-    private StarService starService;
+    private final StarService starService;
 
-    // Xem tất cả đánh giá của 1 sản phẩm
     @GetMapping("/get-star")
     public ResponseEntity<?> getAllStarByProduct(@RequestParam Long idProduct) {
         try {
@@ -29,7 +28,6 @@ public class StarController {
         }
     }
 
-    // Xem đánh giá của sản phẩm theo số sao
     @GetMapping("/get-star-by-type")
     public ResponseEntity<?> getAllStarByProductAndType(@RequestParam Long idProduct, @RequestParam String type) {
         try {
@@ -40,7 +38,6 @@ public class StarController {
         }
     }
 
-    // Tạo mới đánh giá
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestParam Long idProduct, @RequestParam Long idUser, @RequestParam String type) {
         try {

@@ -3,7 +3,7 @@ package com.example.quanlybanhang.service.impl;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.repository.ProductRepository;
 import com.example.quanlybanhang.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,10 +11,10 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<Product> findAll() {
