@@ -5,8 +5,11 @@ import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.repository.ProductRepository;
 import com.example.quanlybanhang.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -44,15 +47,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getAllProduct() {
-        return productRepository.getAllProduct();
+        List<Product> productList = productRepository.getAllProduct();
+        if (CollectionUtils.isEmpty(productList)) return new ArrayList<>();
+        return productList;
     }
 
     @Override
     public void validateProduct(Product product) {
-        if (null == product.getProductName() || "".equals(product.getProductName())) {
+        if (StringUtils.isEmpty(product.getProductName())) {
             throw new BadRequestException("Tên sản phẩm không được để trống");
         }
-        if (null == product.getPrice() || "".equals(product.getPrice())) {
+        if (StringUtils.isEmpty(product.getPrice())) {
             throw new BadRequestException("Giá sản phẩm không được để trống");
         }
         if (product.getQuantity() <= 0) {

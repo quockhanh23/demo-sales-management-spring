@@ -7,6 +7,7 @@ import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.repository.UserRepository;
 import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -36,10 +37,10 @@ public class UserServiceImpl implements UserService {
     public void checkLogin(String username, String password) {
         Optional<User> user = findUserByUsername(username);
         if (user.isEmpty()) {
-            throw new BadRequestException("Người dùng không tồn tại");
+            throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
         }
         if (!user.get().getPassword().equals(password)) {
-            throw new BadRequestException("Mật khẩu không đúng");
+            throw new BadRequestException(MessageConstants.WRONG_PASS);
         }
     }
 
@@ -52,12 +53,12 @@ public class UserServiceImpl implements UserService {
     public void resetPassword(String username, String pin, String newPassword, String confirmPassword) {
         Optional<User> user = findUserByUsername(username);
         if (user.isEmpty()) {
-            throw new BadRequestException("Người dùng không tồn tại");
+            throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
         }
         if (!user.get().getPin().equals(pin)) {
             throw new BadRequestException("Sai mã pin");
         }
-        if (null == newPassword || "".equals(newPassword)) {
+        if (StringUtils.isEmpty(newPassword)) {
             throw new BadRequestException("Bạn chưa nhập mật khẩu mới");
         } else if (newPassword.length() > 32 || newPassword.length() < 6) {
             throw new BadRequestException("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
@@ -74,10 +75,10 @@ public class UserServiceImpl implements UserService {
     public void checkRoleAdmin(Long idUser) {
         Optional<User> user = findById(idUser);
         if (user.isEmpty()) {
-            throw new BadRequestException("Người dùng không tồn tại");
+            throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
         }
         if (!SalesManagementConstants.ROLE_ADMIN.equals(user.get().getRole())) {
-            throw new BadRequestException("Bạn không phải là admin");
+            throw new BadRequestException(MessageConstants.NOT_ADMIN);
         }
     }
 
@@ -98,7 +99,7 @@ public class UserServiceImpl implements UserService {
         if (user.getPin().length() != 8) {
             throw new BadRequestException("Số pin chỉ có 8 số");
         }
-        user.setStatus("Đang hoạt động");
+        user.setStatus(SalesManagementConstants.STATUS_ACTIVE);
         if (null == user.getRole() && user.isBuyer()) {
             user.setRole(SalesManagementConstants.ROLE_BUYER);
         } else {
@@ -113,9 +114,9 @@ public class UserServiceImpl implements UserService {
     public void checkBannerUser(String username) {
         Optional<User> user = findUserByUsername(username);
         if (user.isEmpty()) {
-            throw new BadRequestException("Người dùng không tồn tại");
+            throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
         } else {
-            throw new BadRequestException("Bạn đang bị cấm hãy liên hệ với admin");
+            throw new BadRequestException(MessageConstants.USER_HAS_BANED);
         }
     }
 
