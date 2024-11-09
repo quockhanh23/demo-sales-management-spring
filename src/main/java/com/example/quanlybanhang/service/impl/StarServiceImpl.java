@@ -1,11 +1,14 @@
 package com.example.quanlybanhang.service.impl;
 
+import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.Star;
 import com.example.quanlybanhang.repository.StarRepository;
 import com.example.quanlybanhang.service.StarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,11 +17,6 @@ import java.util.Optional;
 public class StarServiceImpl implements StarService {
 
     private final StarRepository starRepository;
-
-    @Override
-    public List<Star> findAll() {
-        return starRepository.findAll();
-    }
 
     @Override
     public Optional<Star> findById(Long id) {
@@ -37,16 +35,20 @@ public class StarServiceImpl implements StarService {
 
     @Override
     public List<Star> findAllByProductIdAndType(Long idProduct, String type) {
-        return starRepository.findAllByProductIdAndType(idProduct, type);
+        List<Star> starList = starRepository.findAllByProductIdAndType(idProduct, type);
+        if (CollectionUtils.isEmpty(starList)) starList = new ArrayList<>();
+        return starList;
     }
 
     @Override
     public List<Star> findAllByProductId(Long idProduct) {
-        return starRepository.findAllByProductId(idProduct);
+        List<Star> starList = starRepository.findAllByProductId(idProduct);
+        if (CollectionUtils.isEmpty(starList)) starList = new ArrayList<>();
+        return starList;
     }
 
     @Override
-    public Star initStar(Long idUser, Long idProduct, String type) throws Exception {
+    public Star initStar(Long idUser, Long idProduct, String type) {
         String[] rangeOfType = {"1", "2", "3", "4", "5"};
         int count = 0;
         for (String s : rangeOfType) {
@@ -57,7 +59,7 @@ public class StarServiceImpl implements StarService {
             }
         }
         if (count == 5) {
-            throw new Exception("Chỉ có thể đánh giá từ 1 đến 5 sao");
+            throw new BadRequestException("Chỉ có thể đánh giá từ 1 đến 5 sao");
         }
         Star star = new Star();
         star.setNumberOfStars(type);

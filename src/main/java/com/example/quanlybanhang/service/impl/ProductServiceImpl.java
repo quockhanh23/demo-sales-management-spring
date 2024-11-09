@@ -1,5 +1,6 @@
 package com.example.quanlybanhang.service.impl;
 
+import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.repository.ProductRepository;
 import com.example.quanlybanhang.service.ProductService;
@@ -47,15 +48,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void validateProduct(Product product) throws Exception {
+    public void validateProduct(Product product) {
         if (null == product.getProductName() || "".equals(product.getProductName())) {
-            throw new Exception("Tên sản phẩm không được để trống");
+            throw new BadRequestException("Tên sản phẩm không được để trống");
         }
         if (null == product.getPrice() || "".equals(product.getPrice())) {
-            throw new Exception("Giá sản phẩm không được để trống");
+            throw new BadRequestException("Giá sản phẩm không được để trống");
         }
         if (product.getQuantity() <= 0) {
-            throw new Exception("Số lượng sản phẩm phải lớn hơn 0");
+            throw new BadRequestException("Số lượng sản phẩm phải lớn hơn 0");
         }
     }
 }

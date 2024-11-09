@@ -1,6 +1,6 @@
 package com.example.quanlybanhang.constant;
 
-public class Constants {
+public class SalesManagementConstants {
     public static final String ROLE_BUYER = "Người mua";
     public static final String ROLE_SELLER = "Người bán";
     public static final String ROLE_ADMIN = "Admin";

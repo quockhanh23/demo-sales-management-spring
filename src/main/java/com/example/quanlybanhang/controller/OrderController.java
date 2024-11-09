@@ -1,6 +1,6 @@
 package com.example.quanlybanhang.controller;
 
-import com.example.quanlybanhang.constant.Constants;
+import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.models.OrderProduct;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.models.User;
@@ -32,23 +32,19 @@ public class OrderController {
                                          @RequestParam Long idUser,
                                          @RequestParam List<Long> listIdProduct) {
         try {
-            Optional<User> userOptional = userService.findById(idUser);
-            if (userOptional.isEmpty()) {
-                return new ResponseEntity<>("Không tìm thấy người dùng", HttpStatus.NOT_FOUND);
-            }
+            User user = userService.checkExistUser(idUser);
             Set<Product> productSet = productService.findAllByIdProductIn(listIdProduct);
             Long id = 0L;
             if (null != idOrder) {
                 id = idOrder;
             }
             Optional<OrderProduct> optionalOrderProduct = orderProductService.findById(id);
-
             if (optionalOrderProduct.isEmpty()) {
                 OrderProduct orderProduct = new OrderProduct();
                 orderProduct.setCreateAt(new Date());
-                orderProduct.setUser(userOptional.get());
+                orderProduct.setUser(user);
                 orderProduct.setProductSet(productSet);
-                orderProduct.setStatus(Constants.STATUS_ORDER_PENDING);
+                orderProduct.setStatus(SalesManagementConstants.STATUS_ORDER_PENDING);
                 orderProductService.save(orderProduct);
                 return new ResponseEntity<>(orderProduct, HttpStatus.OK);
             }
@@ -62,7 +58,6 @@ public class OrderController {
         }
     }
 
-    // Đổi trạng thái đơn hàng
     @GetMapping("/changeStatus")
     public ResponseEntity<?> changeStatus(@RequestParam String status,
                                           @RequestParam Long idOrderProduct,
@@ -73,7 +68,7 @@ public class OrderController {
                 return new ResponseEntity<>("không tìm thấy đơn hàng", HttpStatus.BAD_REQUEST);
             } else {
                 if (optionalOrderProduct.get().getUser().getId().equals(idUser)) {
-                    if (optionalOrderProduct.get().getStatus().equals(Constants.STATUS_ORDER_BOUGHT)) {
+                    if (optionalOrderProduct.get().getStatus().equals(SalesManagementConstants.STATUS_ORDER_BOUGHT)) {
                         return new ResponseEntity<>("Đơn hàng này đã hoàn thành", HttpStatus.BAD_REQUEST);
                     } else {
                         optionalOrderProduct.get().setStatus(status);

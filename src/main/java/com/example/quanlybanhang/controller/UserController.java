@@ -1,6 +1,8 @@
 package com.example.quanlybanhang.controller;
 
+import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.dto.UserDTO;
+import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,54 +22,38 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody User user) {
-        try {
-            userService.validateUser(user);
-            userService.save(user);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        userService.validateUser(user);
+        userService.save(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/changeStatus")
     public ResponseEntity<?> changeStatus(@RequestParam Long idUser, @RequestParam String status) {
-        try {
-            Optional<User> userOptional = userService.findById(idUser);
-            userOptional.ifPresent(user -> user.setStatus(status));
-            return new ResponseEntity<>(userOptional, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        Optional<User> userOptional = userService.findById(idUser);
+        userOptional.ifPresent(user -> user.setStatus(status));
+        return new ResponseEntity<>(userOptional, HttpStatus.OK);
     }
 
     @GetMapping("/getInformation")
     public ResponseEntity<?> getInformation(@RequestParam Long idUser) {
-        try {
-            Optional<User> user = userService.findById(idUser);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        Optional<User> userOptional = userService.findById(idUser);
+        if (userOptional.isEmpty()) {
+            throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
         }
+        return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        try {
-            userService.checkLogin(user.getUsername(), user.getPassword());
-            userService.checkBannerUser(user.getUsername());
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        userService.checkLogin(user.getUsername(), user.getPassword());
+        userService.checkBannerUser(user.getUsername());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody UserDTO user) {
-        try {
-            userService.resetPassword(user.getUsername(), user.getPin(), user.getNewPassword(), user.getConfirmPassword());
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        userService.resetPassword(user.getUsername(), user.getPin(),
+                user.getNewPassword(), user.getConfirmPassword());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

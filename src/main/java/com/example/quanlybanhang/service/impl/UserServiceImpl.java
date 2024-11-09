@@ -1,6 +1,8 @@
 package com.example.quanlybanhang.service.impl;
 
-import com.example.quanlybanhang.constant.Constants;
+import com.example.quanlybanhang.constant.MessageConstants;
+import com.example.quanlybanhang.constant.SalesManagementConstants;
+import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.repository.UserRepository;
 import com.example.quanlybanhang.service.UserService;
@@ -21,7 +23,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) throws Exception {
+    public void save(User user) {
         userRepository.save(user);
     }
 
@@ -31,13 +33,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void checkLogin(String username, String password) throws Exception {
+    public void checkLogin(String username, String password) {
         Optional<User> user = findUserByUsername(username);
         if (user.isEmpty()) {
-            throw new Exception("Người dùng không tồn tại");
+            throw new BadRequestException("Người dùng không tồn tại");
         }
         if (!user.get().getPassword().equals(password)) {
-            throw new Exception("Mật khẩu không đúng");
+            throw new BadRequestException("Mật khẩu không đúng");
         }
     }
 
@@ -47,21 +49,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String username, String pin, String newPassword, String confirmPassword) throws Exception {
+    public void resetPassword(String username, String pin, String newPassword, String confirmPassword) {
         Optional<User> user = findUserByUsername(username);
         if (user.isEmpty()) {
-            throw new Exception("Người dùng không tồn tại");
+            throw new BadRequestException("Người dùng không tồn tại");
         }
         if (!user.get().getPin().equals(pin)) {
-            throw new Exception("Sai mã pin");
+            throw new BadRequestException("Sai mã pin");
         }
         if (null == newPassword || "".equals(newPassword)) {
-            throw new Exception("Bạn chưa nhập mật khẩu mới");
+            throw new BadRequestException("Bạn chưa nhập mật khẩu mới");
         } else if (newPassword.length() > 32 || newPassword.length() < 6) {
-            throw new Exception("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
+            throw new BadRequestException("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
         }
         if (!newPassword.equals(confirmPassword)) {
-            throw new Exception("Xác nhận lại mật khẩu không đúng");
+            throw new BadRequestException("Xác nhận lại mật khẩu không đúng");
         }
         user.get().setPassword(newPassword);
         user.get().setConfirmPassword(confirmPassword);
@@ -69,52 +71,60 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void checkRoleAdmin(Long idUser) throws Exception {
+    public void checkRoleAdmin(Long idUser) {
         Optional<User> user = findById(idUser);
         if (user.isEmpty()) {
-            throw new Exception("Người dùng không tồn tại");
+            throw new BadRequestException("Người dùng không tồn tại");
         }
-        if (!Constants.ROLE_ADMIN.equals(user.get().getRole())) {
-            throw new Exception("Bạn không phải là admin");
+        if (!SalesManagementConstants.ROLE_ADMIN.equals(user.get().getRole())) {
+            throw new BadRequestException("Bạn không phải là admin");
         }
     }
 
     @Override
-    public void validateUser(User user) throws Exception {
+    public void validateUser(User user) {
         if (user.getUsername().length() > 50) {
-            throw new Exception("User name vượt quá 50 kí tự");
+            throw new BadRequestException("User name vượt quá 50 kí tự");
         }
-        // So sánh mật khẩu và xác nhận mật khẩu có giống nhau không
         if (!user.getPassword().equals(user.getConfirmPassword())) {
-            throw new Exception("Xác nhận lại mật khẩu không đúng");
+            throw new BadRequestException("Xác nhận lại mật khẩu không đúng");
         }
         if (user.getPassword().length() > 32 || user.getPassword().length() < 6) {
-            throw new Exception("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
+            throw new BadRequestException("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
         }
         if (user.getPhone().length() != 11) {
-            throw new Exception("Số điện thoại chỉ có 10 số thôi");
+            throw new BadRequestException("Số điện thoại chỉ có 10 số thôi");
         }
         if (user.getPin().length() != 8) {
-            throw new Exception("Số pin chỉ có 8 số");
+            throw new BadRequestException("Số pin chỉ có 8 số");
         }
         user.setStatus("Đang hoạt động");
         if (null == user.getRole() && user.isBuyer()) {
-            user.setRole(Constants.ROLE_BUYER);
+            user.setRole(SalesManagementConstants.ROLE_BUYER);
         } else {
-            user.setRole(Constants.ROLE_SELLER);
+            user.setRole(SalesManagementConstants.ROLE_SELLER);
         }
-        if (user.getRole().equals(Constants.ROLE_ADMIN)) {
-            user.setRole(Constants.ROLE_ADMIN);
+        if (user.getRole().equals(SalesManagementConstants.ROLE_ADMIN)) {
+            user.setRole(SalesManagementConstants.ROLE_ADMIN);
         }
     }
 
     @Override
-    public void checkBannerUser(String username) throws Exception {
+    public void checkBannerUser(String username) {
         Optional<User> user = findUserByUsername(username);
         if (user.isEmpty()) {
-            throw new Exception("Người dùng không tồn tại");
+            throw new BadRequestException("Người dùng không tồn tại");
         } else {
-            throw new Exception("Bạn đang bị cấm hãy liên hệ với admin");
+            throw new BadRequestException("Bạn đang bị cấm hãy liên hệ với admin");
+        }
+    }
+
+    public User checkExistUser(Long idUser) {
+        Optional<User> user = findById(idUser);
+        if (user.isEmpty()) {
+            throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
+        } else {
+            return user.get();
         }
     }
 }

@@ -20,32 +20,24 @@ public class StarController {
 
     @GetMapping("/get-star")
     public ResponseEntity<?> getAllStarByProduct(@RequestParam Long idProduct) {
-        try {
-            List<Star> list = starService.findAllByProductId(idProduct);
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        List<Star> list = starService.findAllByProductId(idProduct);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping("/get-star-by-type")
-    public ResponseEntity<?> getAllStarByProductAndType(@RequestParam Long idProduct, @RequestParam String type) {
-        try {
-            List<Star> list = starService.findAllByProductIdAndType(idProduct, type);
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    @GetMapping("/star-level")
+    public ResponseEntity<?> getAllStarByProductAndLevel(@RequestParam Long idProduct,
+                                                         @RequestParam String type) {
+        List<Star> list = starService.findAllByProductIdAndType(idProduct, type);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestParam Long idProduct, @RequestParam Long idUser, @RequestParam String type) {
-        try {
-            Star star = starService.initStar(idUser, idProduct, type);
-            starService.save(star);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    @PostMapping("/create-star")
+    public ResponseEntity<?> create(@RequestParam Long idProduct,
+                                    @RequestParam Long idUser,
+                                    @RequestParam String type) {
+
+        Star star = starService.initStar(idUser, idProduct, type);
+        starService.save(star);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,6 +1,9 @@
 package com.example.quanlybanhang.controller;
 
+import com.example.quanlybanhang.constant.MessageConstants;
+import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.dto.ProductDTO;
+import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
@@ -26,14 +29,10 @@ public class ProductController {
 
     @PostMapping("/create-product")
     public ResponseEntity<?> createProduct(@RequestBody Product product, @RequestParam Long idUser) {
-        try {
-            userService.checkRoleAdmin(idUser);
-            productService.validateProduct(product);
-            product.setStatus("Hoạt động");
-            productService.save(product);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        userService.checkRoleAdmin(idUser);
+        productService.validateProduct(product);
+        product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
+        productService.save(product);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -41,39 +40,31 @@ public class ProductController {
     public ResponseEntity<?> updateStatusProduct(@RequestParam String status,
                                                  @RequestParam Long idProduct,
                                                  @RequestParam Long idUser) {
-        try {
-            userService.checkRoleAdmin(idUser);
-            Optional<Product> productOptional = productService.findById(idProduct);
-            if (productOptional.isEmpty()) {
-                return new ResponseEntity<>("Không tìm thấy sản phẩm", HttpStatus.BAD_REQUEST);
-            }
-            productOptional.get().setStatus(status);
-            productService.save(productOptional.get());
-            return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        userService.checkRoleAdmin(idUser);
+        Optional<Product> productOptional = productService.findById(idProduct);
+        if (productOptional.isEmpty()) {
+            throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
         }
+        productOptional.get().setStatus(status);
+        productService.save(productOptional.get());
+        return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
     }
 
     @PutMapping("/update-product")
     public ResponseEntity<?> updateInformationProduct(@RequestBody Product product,
                                                       @RequestParam Long idProduct,
                                                       @RequestParam Long idUser) {
-        try {
-            userService.checkRoleAdmin(idUser);
-            Optional<Product> productOptional = productService.findById(idProduct);
-            if (productOptional.isEmpty()) {
-                return new ResponseEntity<>("Không tìm thấy sản phẩm", HttpStatus.BAD_REQUEST);
-            }
-            productOptional.get().setStatus(product.getStatus());
-            productOptional.get().setProductName(product.getProductName());
-            productOptional.get().setQuantity(product.getQuantity());
-            productOptional.get().setPrice(product.getPrice());
-            productService.save(productOptional.get());
-            return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        userService.checkRoleAdmin(idUser);
+        Optional<Product> productOptional = productService.findById(idProduct);
+        if (productOptional.isEmpty()) {
+            throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
         }
+        productOptional.get().setStatus(product.getStatus());
+        productOptional.get().setProductName(product.getProductName());
+        productOptional.get().setQuantity(product.getQuantity());
+        productOptional.get().setPrice(product.getPrice());
+        productService.save(productOptional.get());
+        return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-product")
@@ -82,12 +73,13 @@ public class ProductController {
             userService.checkRoleAdmin(idUser);
             Optional<Product> productOptional = productService.findById(idProduct);
             if (productOptional.isEmpty()) {
-                return new ResponseEntity<>("Không tìm thấy sản phẩm", HttpStatus.BAD_REQUEST);
+                throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
             }
             productOptional.get().setDelete(true);
             productService.save(productOptional.get());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -106,6 +98,7 @@ public class ProductController {
             }
             return new ResponseEntity<>(productDTOS, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

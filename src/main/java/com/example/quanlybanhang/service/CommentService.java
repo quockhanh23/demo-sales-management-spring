@@ -13,10 +13,10 @@ public interface CommentService {
 
     List<Comment> findAllCommentByProductIdAndUserId(Long idProduct, Long idUser);
 
-    void save(Comment comment) throws Exception;
+    void save(Comment comment);
 
-    void delete(Long id) throws Exception;
+    void delete(Long id);
 
-    Comment validateCommentAndInit(CommentDTO commentDTO) throws Exception;
+    Comment validateCommentAndInit(CommentDTO commentDTO);
 
 }

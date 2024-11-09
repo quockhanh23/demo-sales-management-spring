@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface StarService {
 
-    List<Star> findAll();
-
     Optional<Star> findById(Long id);
 
     void save(Star star);
@@ -16,7 +14,8 @@ public interface StarService {
     void delete(Long id);
 
     List<Star> findAllByProductIdAndType(Long idProduct, String type);
+
     List<Star> findAllByProductId(Long idProduct);
 
-    Star initStar(Long idUser, Long idProduct, String type) throws Exception;
+    Star initStar(Long idUser, Long idProduct, String type);
 }

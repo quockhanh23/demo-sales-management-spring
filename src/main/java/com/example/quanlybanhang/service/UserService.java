@@ -8,19 +8,21 @@ public interface UserService {
 
     Optional<User> findById(Long id);
 
-    void save(User user) throws Exception;
+    void save(User user);
 
     void delete(Long id);
 
-    void checkLogin(String username, String password) throws Exception;
+    void checkLogin(String username, String password);
 
     Optional<User> findUserByUsername(String username);
 
-    void resetPassword(String username, String pin, String newPassword, String confirmPassword) throws Exception;
+    void resetPassword(String username, String pin, String newPassword, String confirmPassword);
 
-    void checkRoleAdmin(Long idUser) throws Exception;
+    void checkRoleAdmin(Long idUser);
 
-    void validateUser(User user) throws Exception;
+    void validateUser(User user);
 
-    void checkBannerUser(String username) throws Exception;
+    void checkBannerUser(String username);
+
+    User checkExistUser(Long idUser);
 }

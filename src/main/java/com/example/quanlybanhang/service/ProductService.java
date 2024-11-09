@@ -20,5 +20,5 @@ public interface ProductService {
 
     List<Product> getAllProduct();
 
-    void validateProduct(Product product) throws Exception;
+    void validateProduct(Product product);
 }
