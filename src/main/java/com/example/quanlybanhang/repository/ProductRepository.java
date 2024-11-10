@@ -15,6 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Set<Product> findAllByIdProductIn(List<Long> id);
 
     @Modifying
-    @Query(value = "select * from product where is_delete = false and status = 'Hoạt động' and quantity > 0", nativeQuery = true)
+    @Query(value = "select * from product where is_delete = false and status = 'ACTIVE' and quantity > 0", nativeQuery = true)
     List<Product> getAllProduct();
 }

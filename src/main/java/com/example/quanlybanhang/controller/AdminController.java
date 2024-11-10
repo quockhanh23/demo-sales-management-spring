@@ -26,51 +26,38 @@ public class AdminController {
 
     @GetMapping("/get-all-user")
     public ResponseEntity<?> getAllUser(@RequestParam Long idUser) {
-        try {
-            User admin = userService.checkExistUser(idUser);
-            if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
-                throw new BadRequestException(MessageConstants.NOT_ADMIN);
-            }
-            List<User> userList = userRepository.findAll();
-            if (!CollectionUtils.isEmpty(userList)) {
-                userList.removeIf(n -> (n.getRole().equals(SalesManagementConstants.ROLE_ADMIN)));
-            }
-            return new ResponseEntity<>(userList, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        User admin = userService.checkExistUser(idUser);
+        if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
+            throw new BadRequestException(MessageConstants.NOT_ADMIN);
         }
+        List<User> userList = userRepository.findAll();
+        if (!CollectionUtils.isEmpty(userList)) {
+            userList.removeIf(n -> (n.getRole().equals(SalesManagementConstants.ROLE_ADMIN)));
+        }
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     @GetMapping("/banner")
     public ResponseEntity<?> banUser(@RequestParam Long idAdmin, @RequestParam Long idUser) {
-        try {
-            User admin = userService.checkExistUser(idAdmin);
-            if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
-                throw new BadRequestException(MessageConstants.NOT_ADMIN);
-            }
-            User user = userService.checkExistUser(idUser);
-            user.setStatus(SalesManagementConstants.STATUS_USER_BANED);
-            userService.save(user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        User admin = userService.checkExistUser(idAdmin);
+        if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
+            throw new BadRequestException(MessageConstants.NOT_ADMIN);
         }
+        User user = userService.checkExistUser(idUser);
+        user.setStatus(SalesManagementConstants.STATUS_USER_BANED);
+        userService.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/open")
+    @GetMapping("/un-ban-user")
     public ResponseEntity<?> unbanUser(@RequestParam Long idAdmin, @RequestParam Long idUser) {
-        try {
-            User admin = userService.checkExistUser(idAdmin);
-            if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
-                throw new BadRequestException(MessageConstants.NOT_ADMIN);
-            }
-            User user = userService.checkExistUser(idUser);
-            user.setStatus(SalesManagementConstants.STATUS_ACTIVE);
-            userService.save(user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        User admin = userService.checkExistUser(idAdmin);
+        if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
+            throw new BadRequestException(MessageConstants.NOT_ADMIN);
         }
+        User user = userService.checkExistUser(idUser);
+        user.setStatus(SalesManagementConstants.STATUS_ACTIVE);
+        userService.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

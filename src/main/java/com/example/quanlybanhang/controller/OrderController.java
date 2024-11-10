@@ -1,6 +1,8 @@
 package com.example.quanlybanhang.controller;
 
+import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
+import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.OrderProduct;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.models.User;
@@ -27,61 +29,52 @@ public class OrderController {
     private final OrderProductService orderProductService;
     private final ProductService productService;
 
-    @GetMapping("/order")
+    @GetMapping("/add-to-cart")
     public ResponseEntity<?> createOrder(@RequestParam(required = false) Long idOrder,
                                          @RequestParam Long idUser,
                                          @RequestParam List<Long> listIdProduct) {
-        try {
-            User user = userService.checkExistUser(idUser);
-            Set<Product> productSet = productService.findAllByIdProductIn(listIdProduct);
-            Long id = 0L;
-            if (null != idOrder) {
-                id = idOrder;
-            }
-            Optional<OrderProduct> optionalOrderProduct = orderProductService.findById(id);
-            if (optionalOrderProduct.isEmpty()) {
-                OrderProduct orderProduct = new OrderProduct();
-                orderProduct.setCreateAt(new Date());
-                orderProduct.setUser(user);
-                orderProduct.setProductSet(productSet);
-                orderProduct.setStatus(SalesManagementConstants.STATUS_ORDER_PENDING);
-                orderProductService.save(orderProduct);
-                return new ResponseEntity<>(orderProduct, HttpStatus.OK);
-            }
-            optionalOrderProduct.get().setEditAt(new Date());
-            optionalOrderProduct.get().setProductSet(productSet);
-            orderProductService.save(optionalOrderProduct.get());
-            return new ResponseEntity<>(optionalOrderProduct.get(), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        User user = userService.checkExistUser(idUser);
+        Set<Product> productSet = productService.findAllByIdProductIn(listIdProduct);
+        Long id = 0L;
+        if (null != idOrder) {
+            id = idOrder;
         }
+        Optional<OrderProduct> optionalOrderProduct = orderProductService.findById(id);
+        if (optionalOrderProduct.isEmpty()) {
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setCreateAt(new Date());
+            orderProduct.setUser(user);
+            orderProduct.setProductSet(productSet);
+            orderProduct.setStatus(SalesManagementConstants.STATUS_ORDER_PENDING);
+            orderProductService.save(orderProduct);
+            return new ResponseEntity<>(orderProduct, HttpStatus.OK);
+        }
+        optionalOrderProduct.get().setEditAt(new Date());
+        optionalOrderProduct.get().setProductSet(productSet);
+        orderProductService.save(optionalOrderProduct.get());
+        return new ResponseEntity<>(optionalOrderProduct.get(), HttpStatus.OK);
     }
 
-    @GetMapping("/changeStatus")
+    @GetMapping("/change-status")
     public ResponseEntity<?> changeStatus(@RequestParam String status,
                                           @RequestParam Long idOrderProduct,
                                           @RequestParam Long idUser) {
-        try {
-            Optional<OrderProduct> optionalOrderProduct = orderProductService.findById(idOrderProduct);
-            if (optionalOrderProduct.isEmpty()) {
-                return new ResponseEntity<>("không tìm thấy đơn hàng", HttpStatus.BAD_REQUEST);
-            } else {
-                if (optionalOrderProduct.get().getUser().getId().equals(idUser)) {
-                    if (optionalOrderProduct.get().getStatus().equals(SalesManagementConstants.STATUS_ORDER_BOUGHT)) {
-                        return new ResponseEntity<>("Đơn hàng này đã hoàn thành", HttpStatus.BAD_REQUEST);
-                    } else {
-                        optionalOrderProduct.get().setStatus(status);
-                        optionalOrderProduct.get().setEditAt(new Date());
-                        orderProductService.save(optionalOrderProduct.get());
-                    }
-                    return new ResponseEntity<>(HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>("Đơn hàng này không phải của bạn", HttpStatus.BAD_REQUEST);
-                }
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        OrderProduct orderProduct = orderProductService.checkExistOrderProduct(idOrderProduct);
+        if (!orderProduct.getUser().getId().equals(idUser)) {
+            throw new BadRequestException(MessageConstants.ORDER_IS_NOT_OF_USE);
         }
+        if (SalesManagementConstants.STATUS_ORDER_BOUGHT.equals(orderProduct.getStatus())) {
+            throw new BadRequestException(MessageConstants.ORDER_HAS_BEEN_COMPLETED);
+        }
+        orderProduct.setStatus(status);
+        orderProduct.setEditAt(new Date());
+        orderProductService.save(orderProduct);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/count-order")
+    public ResponseEntity<?> countOrder(@RequestParam Long idUser) {
+        User user = userService.checkExistUser(idUser);
+        return new ResponseEntity<>(orderProductService.countAllByUser(user), HttpStatus.OK);
     }
 }

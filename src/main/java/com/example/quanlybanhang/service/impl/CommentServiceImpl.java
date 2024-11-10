@@ -67,16 +67,16 @@ public class CommentServiceImpl implements CommentService {
         if (StringUtils.isEmpty(commentDTO.getContent())) {
             throw new BadRequestException("Không có nội dung");
         }
-        Optional<User> userOptional = userService.findById(commentDTO.getIdUser());
+        User user = userService.checkExistUser(commentDTO.getIdUser());
         Optional<Product> productOptional = productService.findById(commentDTO.getIdProduct());
-        if (userOptional.isEmpty() || productOptional.isEmpty()) {
+        if (productOptional.isEmpty()) {
             throw new BadRequestException("không tìm thấy người dùng hoặc sản phẩm");
         }
         Comment comment = new Comment();
         comment.setCreateDate(new Date());
         comment.setContent(commentDTO.getContent());
         comment.setProduct(productOptional.get());
-        comment.setUser(userOptional.get());
+        comment.setUser(user);
         return comment;
     }
 }

@@ -1,6 +1,9 @@
 package com.example.quanlybanhang.service.impl;
 
+import com.example.quanlybanhang.constant.MessageConstants;
+import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.OrderProduct;
+import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.repository.OrderProductRepository;
 import com.example.quanlybanhang.service.OrderProductService;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +19,6 @@ public class OrderProductServiceImpl implements OrderProductService {
     private final OrderProductRepository orderProductRepository;
 
     @Override
-    public List<OrderProduct> findAll() {
-        return orderProductRepository.findAll();
-    }
-
-    @Override
     public Optional<OrderProduct> findById(Long id) {
         return orderProductRepository.findById(id);
     }
@@ -33,5 +31,19 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Override
     public void delete(Long id) {
         orderProductRepository.deleteById(id);
+    }
+
+    @Override
+    public OrderProduct checkExistOrderProduct(Long idOrder) {
+        Optional<OrderProduct> optionalOrderProduct = findById(idOrder);
+        if (optionalOrderProduct.isEmpty()) {
+            throw new BadRequestException(MessageConstants.NOT_FOUND_ORDER);
+        }
+        return optionalOrderProduct.get();
+    }
+
+    @Override
+    public long countAllByUser(User user) {
+        return orderProductRepository.countAllByUser(user);
     }
 }

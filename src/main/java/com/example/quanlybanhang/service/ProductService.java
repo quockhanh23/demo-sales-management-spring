@@ -1,14 +1,14 @@
 package com.example.quanlybanhang.service;
 
+import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.models.Product;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public interface ProductService {
-
-    List<Product> findAll();
 
     Optional<Product> findById(Long id);
 
@@ -18,7 +18,7 @@ public interface ProductService {
 
     Set<Product> findAllByIdProductIn(List<Long> id);
 
-    List<Product> getAllProduct();
+    List<ProductDTO> getAllProduct() throws IOException;
 
     void validateProduct(Product product);
 }

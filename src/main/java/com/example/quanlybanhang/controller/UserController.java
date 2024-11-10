@@ -56,4 +56,13 @@ public class UserController {
                 user.getNewPassword(), user.getConfirmPassword());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/findByUserName")
+    public ResponseEntity<?> findByUserName(@RequestParam String username) {
+        Optional<User> userOptional = userService.findUserByUsername(username);
+        if (userOptional.isEmpty()) {
+            throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
+        }
+        return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+    }
 }

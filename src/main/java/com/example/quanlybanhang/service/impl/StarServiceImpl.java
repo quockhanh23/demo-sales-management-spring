@@ -35,7 +35,7 @@ public class StarServiceImpl implements StarService {
 
     @Override
     public List<Star> findAllByProductIdAndType(Long idProduct, String type) {
-        List<Star> starList = starRepository.findAllByProductIdAndType(idProduct, type);
+        List<Star> starList = starRepository.findAllByProductIdAndNumberOfStars(idProduct, type);
         if (CollectionUtils.isEmpty(starList)) starList = new ArrayList<>();
         return starList;
     }

@@ -12,9 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,21 +83,8 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllProduct() {
-        try {
-            List<Product> productList = productService.getAllProduct();
-            List<ProductDTO> productDTOS = new ArrayList<>();
-            for (Product product : productList) {
-                ProductDTO productDTO = new ProductDTO();
-                byte[] imageBytes = Files.readAllBytes(Paths.get(product.getImage()));
-                productDTO.setImage(imageBytes);
-                productDTO.setName(product.getProductName());
-                productDTOS.add(productDTO);
-            }
-            return new ResponseEntity<>(productDTOS, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> getAllProduct() throws IOException {
+        List<ProductDTO> productList = productService.getAllProduct();
+        return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 }

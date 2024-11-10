@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface StarRepository extends JpaRepository<Star, Long> {
 
-    List<Star> findAllByProductIdAndType(Long idProduct, String type);
+    List<Star> findAllByProductIdAndNumberOfStars(Long idProduct, String type);
     List<Star> findAllByProductId(Long idProduct);
 }

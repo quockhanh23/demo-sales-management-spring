@@ -30,7 +30,7 @@ public class UploadFileController {
         try {
             File uploadFile = new File("src/main/resources/static/images/" + convertFileName(fileName));
             FileCopyUtils.copy(image.getBytes(), uploadFile);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(uploadFile, HttpStatus.OK);
         } catch (IOException ex) {
             ex.printStackTrace();
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -115,7 +115,8 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = findUserByUsername(username);
         if (user.isEmpty()) {
             throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
-        } else {
+        }
+        if (SalesManagementConstants.STATUS_USER_BANED.equals(user.get().getStatus())) {
             throw new BadRequestException(MessageConstants.USER_HAS_BANED);
         }
     }
