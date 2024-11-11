@@ -9,7 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductDTO {
     private Long id;
-    private String name;
+    private String productName;
+    private String description;
     private String price;
     private int quantity;
     private byte[] image;

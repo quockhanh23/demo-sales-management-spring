@@ -24,4 +24,5 @@ public class Product {
     private String status;
     private boolean isDelete;
     private String image;
+    private String description;
 }

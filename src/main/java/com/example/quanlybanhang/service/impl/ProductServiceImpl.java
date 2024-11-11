@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
             ProductDTO productDTO = new ProductDTO();
             productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
             productDTO.setId(product.getIdProduct());
-            productDTO.setName(product.getProductName());
+            productDTO.setProductName(product.getProductName());
             productDTO.setPrice(product.getPrice());
             productDTO.setQuantity(product.getQuantity());
             productDTOS.add(productDTO);
@@ -75,6 +75,9 @@ public class ProductServiceImpl implements ProductService {
         }
         if (StringUtils.isEmpty(product.getImage())) {
             product.setImage(SalesManagementConstants.SRC_IMAGE + SalesManagementConstants.DEFAULT_NO_IMAGE);
+        }
+        if (product.getDescription().length() > 50) {
+            throw new BadRequestException(MessageConstants.PRODUCT_DESCRIPTION_MAX_SIZE);
         }
         product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
     }
