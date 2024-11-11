@@ -1,7 +1,6 @@
 package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.constant.MessageConstants;
-import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.Product;
@@ -29,7 +28,6 @@ public class ProductController {
     public ResponseEntity<?> createProduct(@RequestBody Product product, @RequestParam Long idUser) {
         userService.checkRoleAdmin(idUser);
         productService.validateProduct(product);
-        product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
         productService.save(product);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }

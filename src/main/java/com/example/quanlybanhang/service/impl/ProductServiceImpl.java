@@ -61,7 +61,10 @@ public class ProductServiceImpl implements ProductService {
                 byte[] imageBytes = Files.readAllBytes(Paths.get(defaultImageURL));
                 productDTO.setImage(imageBytes);
             }
+            productDTO.setId(product.getIdProduct());
             productDTO.setName(product.getProductName());
+            productDTO.setPrice(product.getPrice());
+            productDTO.setQuantity(product.getQuantity());
             productDTOS.add(productDTO);
         }
         return productDTOS;
@@ -78,5 +81,9 @@ public class ProductServiceImpl implements ProductService {
         if (product.getQuantity() <= 0) {
             throw new BadRequestException(MessageConstants.PRODUCT_QUANTITY_MUST_GREAT_THAN_ZERO);
         }
+        if (StringUtils.isEmpty(product.getImage())) {
+            product.setImage(SalesManagementConstants.SRC_IMAGE + SalesManagementConstants.DEFAULT_NO_IMAGE);
+        }
+        product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
     }
 }

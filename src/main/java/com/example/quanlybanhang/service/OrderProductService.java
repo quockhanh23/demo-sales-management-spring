@@ -1,7 +1,8 @@
 package com.example.quanlybanhang.service;
 
+import com.example.quanlybanhang.dto.OrderProductDTO;
+import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.models.OrderProduct;
-import com.example.quanlybanhang.models.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +17,9 @@ public interface OrderProductService {
 
     OrderProduct checkExistOrderProduct(Long idOrder);
 
-    long countAllByUser(User user);
+    long countAllByUser(Long idUser);
+
+    void addToCart(Long idUser, ProductDTO productDTO);
+
+    OrderProductDTO getAllProductInCart(Long idUser);
 }

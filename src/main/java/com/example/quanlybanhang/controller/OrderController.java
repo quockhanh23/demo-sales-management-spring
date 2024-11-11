@@ -2,22 +2,17 @@ package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
+import com.example.quanlybanhang.dto.OrderProductDTO;
+import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.OrderProduct;
-import com.example.quanlybanhang.models.Product;
-import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.service.OrderProductService;
-import com.example.quanlybanhang.service.ProductService;
-import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @CrossOrigin("*")
@@ -25,34 +20,23 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final UserService userService;
     private final OrderProductService orderProductService;
-    private final ProductService productService;
 
-    @GetMapping("/add-to-cart")
-    public ResponseEntity<?> createOrder(@RequestParam(required = false) Long idOrder,
-                                         @RequestParam Long idUser,
-                                         @RequestParam List<Long> listIdProduct) {
-        User user = userService.checkExistUser(idUser);
-        Set<Product> productSet = productService.findAllByIdProductIn(listIdProduct);
-        Long id = 0L;
-        if (null != idOrder) {
-            id = idOrder;
+    @PostMapping("/add-to-cart")
+    public ResponseEntity<?> addToCart(@RequestParam Long idUser,
+                                       @RequestBody ProductDTO productDTO) {
+        try {
+            orderProductService.addToCart(idUser, productDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Optional<OrderProduct> optionalOrderProduct = orderProductService.findById(id);
-        if (optionalOrderProduct.isEmpty()) {
-            OrderProduct orderProduct = new OrderProduct();
-            orderProduct.setCreateAt(new Date());
-            orderProduct.setUser(user);
-            orderProduct.setProductSet(productSet);
-            orderProduct.setStatus(SalesManagementConstants.STATUS_ORDER_PENDING);
-            orderProductService.save(orderProduct);
-            return new ResponseEntity<>(orderProduct, HttpStatus.OK);
-        }
-        optionalOrderProduct.get().setEditAt(new Date());
-        optionalOrderProduct.get().setProductSet(productSet);
-        orderProductService.save(optionalOrderProduct.get());
-        return new ResponseEntity<>(optionalOrderProduct.get(), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/all-in-cart")
+    public ResponseEntity<?> getAllProductInCart(@RequestParam Long idUser) {
+        OrderProductDTO getAllProductInCart = orderProductService.getAllProductInCart(idUser);
+        return new ResponseEntity<>(getAllProductInCart, HttpStatus.OK);
     }
 
     @GetMapping("/change-status")
@@ -74,7 +58,6 @@ public class OrderController {
 
     @GetMapping("/count-order")
     public ResponseEntity<?> countOrder(@RequestParam Long idUser) {
-        User user = userService.checkExistUser(idUser);
-        return new ResponseEntity<>(orderProductService.countAllByUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(orderProductService.countAllByUser(idUser), HttpStatus.OK);
     }
 }

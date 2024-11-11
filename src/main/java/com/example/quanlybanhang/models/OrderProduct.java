@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +29,5 @@ public class OrderProduct {
     @JoinTable(name = "products_orders",
             joinColumns = {@JoinColumn(name = "order_product_id")},
             inverseJoinColumns = {@JoinColumn(name = "product_id")})
-    private Set<Product> productSet;
+    private List<OrderProductDetail> productDetails;
 }

@@ -16,11 +16,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OrderHistory {
+public class OrderProductDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long idOrderProduct;
-    private Long idUser;
-    private Date createdAt;
+    private Long idProduct;
+    private int quantity;
+    private Date createAt;
+    private double price;
 }
