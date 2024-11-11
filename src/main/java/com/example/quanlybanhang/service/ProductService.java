@@ -21,4 +21,6 @@ public interface ProductService {
     List<ProductDTO> getAllProduct() throws IOException;
 
     void validateProduct(Product product);
+
+    Product checkExistUser(Long idProduct);
 }

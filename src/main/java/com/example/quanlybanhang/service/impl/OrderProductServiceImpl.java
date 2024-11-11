@@ -1,5 +1,6 @@
 package com.example.quanlybanhang.service.impl;
 
+import com.example.quanlybanhang.common.CommonUtils;
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.dto.OrderProductDTO;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -101,7 +103,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public OrderProductDTO getAllProductInCart(Long idUser) {
+    public OrderProductDTO getAllProductInCart(Long idUser) throws IOException {
         User user = userService.checkExistUser(idUser);
         OrderProductDTO orderProductDTO = new OrderProductDTO();
         List<OrderProduct> orderProductList = orderProductRepository.getAllByUser(user);
@@ -125,7 +127,7 @@ public class OrderProductServiceImpl implements OrderProductService {
             orderProductDetailDTO.setIdProduct(aLong);
             orderProductDetailDTO.setProductName(product.getProductName());
             orderProductDetailDTO.setPrice(product.getPrice());
-            orderProductDetailDTO.setImage(product.getImage());
+            orderProductDetailDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
             int price = Integer.parseInt(product.getPrice());
             int total = price * totalQuantity.size();
             orderProductDetailDTO.setTotalPrice(String.valueOf(total));

@@ -4,6 +4,7 @@ import com.example.quanlybanhang.dto.OrderProductDTO;
 import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.models.OrderProduct;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,5 +22,5 @@ public interface OrderProductService {
 
     void addToCart(Long idUser, ProductDTO productDTO);
 
-    OrderProductDTO getAllProductInCart(Long idUser);
+    OrderProductDTO getAllProductInCart(Long idUser) throws IOException;
 }

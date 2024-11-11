@@ -67,4 +67,13 @@ public class StarServiceImpl implements StarService {
         star.setIdUser(idUser);
         return star;
     }
+
+    @Override
+    public Star findStarByUserAndProduct(Long idUser, Long idProduct) {
+        List<Star> list = starRepository.findAllByIdUserAndProductId(idUser, idProduct);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

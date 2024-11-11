@@ -10,5 +10,8 @@ import java.util.List;
 public interface StarRepository extends JpaRepository<Star, Long> {
 
     List<Star> findAllByProductIdAndNumberOfStars(Long idProduct, String type);
+
     List<Star> findAllByProductId(Long idProduct);
+
+    List<Star> findAllByIdUserAndProductId(Long idUser, Long idProduct);
 }

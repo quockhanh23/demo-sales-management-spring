@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Date;
 
 @RestController
@@ -34,7 +35,7 @@ public class OrderController {
     }
 
     @GetMapping("/all-in-cart")
-    public ResponseEntity<?> getAllProductInCart(@RequestParam Long idUser) {
+    public ResponseEntity<?> getAllProductInCart(@RequestParam Long idUser) throws IOException {
         OrderProductDTO getAllProductInCart = orderProductService.getAllProductInCart(idUser);
         return new ResponseEntity<>(getAllProductInCart, HttpStatus.OK);
     }

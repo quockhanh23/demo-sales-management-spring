@@ -24,6 +24,13 @@ public class StarController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @GetMapping("/get-star-by-user")
+    public ResponseEntity<?> getAllStarByUserAndProduct(@RequestParam Long idUser,
+                                                        @RequestParam Long idProduct) {
+        Star star = starService.findStarByUserAndProduct(idUser, idProduct);
+        return new ResponseEntity<>(star, HttpStatus.OK);
+    }
+
     @GetMapping("/star-level")
     public ResponseEntity<?> getAllStarByProductAndLevel(@RequestParam Long idProduct,
                                                          @RequestParam String type) {

@@ -15,5 +15,5 @@ public class OrderProductDetailDTO {
     private String productName;
     private String price;
     private String totalPrice;
-    private String image;
+    private byte[] image;
 }

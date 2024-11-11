@@ -1,5 +1,6 @@
 package com.example.quanlybanhang.controller;
 
+import com.example.quanlybanhang.common.CommonUtils;
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.exeption.BadRequestException;
@@ -7,6 +8,7 @@ import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -84,5 +86,14 @@ public class ProductController {
     public ResponseEntity<?> getAllProduct() throws IOException {
         List<ProductDTO> productList = productService.getAllProduct();
         return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
+    @GetMapping("/detailProduct")
+    public ResponseEntity<?> getDetailProduct(@RequestParam Long idProduct) throws IOException {
+        Product product = productService.checkExistUser(idProduct);
+        ProductDTO productDTO = new ProductDTO();
+        BeanUtils.copyProperties(product, productDTO);
+        productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
+        return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 }

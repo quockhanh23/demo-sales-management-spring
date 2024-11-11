@@ -18,4 +18,6 @@ public interface StarService {
     List<Star> findAllByProductId(Long idProduct);
 
     Star initStar(Long idUser, Long idProduct, String type);
+
+    Star findStarByUserAndProduct(Long idUser, Long idProduct);
 }

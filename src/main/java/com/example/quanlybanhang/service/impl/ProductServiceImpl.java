@@ -1,5 +1,6 @@
 package com.example.quanlybanhang.service.impl;
 
+import com.example.quanlybanhang.common.CommonUtils;
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.dto.ProductDTO;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,14 +52,7 @@ public class ProductServiceImpl implements ProductService {
         if (CollectionUtils.isEmpty(productList)) return productDTOS;
         for (Product product : productList) {
             ProductDTO productDTO = new ProductDTO();
-            if (StringUtils.isNotEmpty(product.getImage())) {
-                byte[] imageBytes = Files.readAllBytes(Paths.get(product.getImage()));
-                productDTO.setImage(imageBytes);
-            } else {
-                String defaultImageURL = SalesManagementConstants.SRC_IMAGE + SalesManagementConstants.DEFAULT_NO_IMAGE;
-                byte[] imageBytes = Files.readAllBytes(Paths.get(defaultImageURL));
-                productDTO.setImage(imageBytes);
-            }
+            productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
             productDTO.setId(product.getIdProduct());
             productDTO.setName(product.getProductName());
             productDTO.setPrice(product.getPrice());
@@ -85,5 +77,14 @@ public class ProductServiceImpl implements ProductService {
             product.setImage(SalesManagementConstants.SRC_IMAGE + SalesManagementConstants.DEFAULT_NO_IMAGE);
         }
         product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
+    }
+
+    public Product checkExistUser(Long idProduct) {
+        Optional<Product> product = findById(idProduct);
+        if (product.isEmpty()) {
+            throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
+        } else {
+            return product.get();
+        }
     }
 }
