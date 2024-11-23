@@ -19,7 +19,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorMessage> requestLimitException(BadRequestException exception, WebRequest request) {
+    public ResponseEntity<ErrorMessage> badRequestException(BadRequestException exception, WebRequest request) {
         ErrorMessage message = new ErrorMessage();
         message.setStatusCode(HttpStatus.BAD_REQUEST.value());
         message.setMessage(exception.getMessage());
