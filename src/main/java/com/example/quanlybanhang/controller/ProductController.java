@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,7 +85,7 @@ public class ProductController {
     @GetMapping("")
     public ResponseEntity<?> getAllProduct() throws IOException {
         List<ProductDTO> productList = productService.getAllProduct();
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
     @GetMapping("/detailProduct")
