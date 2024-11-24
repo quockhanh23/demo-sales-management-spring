@@ -10,6 +10,9 @@ import com.example.quanlybanhang.repository.ProductRepository;
 import com.example.quanlybanhang.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -46,23 +49,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> getAllProduct() throws IOException {
-        List<Product> productList = productRepository.getAllProduct();
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        if (CollectionUtils.isEmpty(productList)) return productDTOS;
-        for (Product product : productList) {
-            ProductDTO productDTO = new ProductDTO();
-            productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
-            productDTO.setId(product.getIdProduct());
-            productDTO.setProductName(product.getProductName());
-            productDTO.setPrice(product.getPrice());
-            productDTO.setQuantity(product.getQuantity());
-            productDTOS.add(productDTO);
-        }
-        return productDTOS;
-    }
-
-    @Override
     public void validateProduct(Product product) {
         if (StringUtils.isEmpty(product.getProductName())) {
             throw new BadRequestException(MessageConstants.PRODUCT_NAME_NOT_EMPTY);
@@ -89,5 +75,29 @@ public class ProductServiceImpl implements ProductService {
         } else {
             return product.get();
         }
+    }
+
+    @Override
+    public Page<ProductDTO> getAllProductPage(Pageable pageable) throws IOException {
+        Page<Product> page = productRepository.getAllProductPage(pageable);
+        List<Product> productList = page.getContent();
+        List<ProductDTO> productDTOList = convertToProductDTO(productList);
+        return new PageImpl<>(productDTOList);
+    }
+
+    private List<ProductDTO> convertToProductDTO(List<Product> productList) throws IOException {
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(productList)) {
+            for (Product product : productList) {
+                ProductDTO productDTO = new ProductDTO();
+                productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
+                productDTO.setId(product.getIdProduct());
+                productDTO.setProductName(product.getProductName());
+                productDTO.setPrice(product.getPrice());
+                productDTO.setQuantity(product.getQuantity());
+                productDTOS.add(productDTO);
+            }
+        }
+        return productDTOS;
     }
 }

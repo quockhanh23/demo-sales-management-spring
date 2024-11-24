@@ -40,6 +40,9 @@ public class UserController {
         if (userOptional.isEmpty()) {
             throw new BadRequestException(MessageConstants.NOT_FOUND_USER);
         }
+        userOptional.get().setPassword(null);
+        userOptional.get().setConfirmPassword(null);
+        userOptional.get().setPin(null);
         return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }
 

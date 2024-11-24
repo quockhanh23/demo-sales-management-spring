@@ -2,6 +2,8 @@ package com.example.quanlybanhang.service;
 
 import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.models.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,9 +20,9 @@ public interface ProductService {
 
     Set<Product> findAllByIdProductIn(List<Long> id);
 
-    List<ProductDTO> getAllProduct() throws IOException;
-
     void validateProduct(Product product);
 
     Product checkExistUser(Long idProduct);
+
+    Page<ProductDTO> getAllProductPage(Pageable pageable) throws IOException;
 }

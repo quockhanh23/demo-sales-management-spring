@@ -9,12 +9,14 @@ import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -82,10 +84,13 @@ public class ProductController {
         }
     }
 
-    @GetMapping("")
-    public ResponseEntity<?> getAllProduct() throws IOException {
-        List<ProductDTO> productList = productService.getAllProduct();
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+    @GetMapping("/getAllProduct")
+    public ResponseEntity<Page<ProductDTO>> getAllProductPage
+            (@RequestParam(defaultValue = "0", required = false) int page,
+             @RequestParam(defaultValue = "10", required = false) int size) throws IOException {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> productDTOPage = productService.getAllProductPage(pageable);
+        return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
     }
 
     @GetMapping("/detailProduct")

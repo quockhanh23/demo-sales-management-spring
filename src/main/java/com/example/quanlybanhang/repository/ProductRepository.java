@@ -1,6 +1,8 @@
 package com.example.quanlybanhang.repository;
 
 import com.example.quanlybanhang.models.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = "select * from product where is_delete = false and status = 'ACTIVE' and quantity > 0", nativeQuery = true)
     List<Product> getAllProduct();
+
+    @Query(value = "select * from product where is_delete = false and status = 'ACTIVE' and quantity > 0", nativeQuery = true)
+    Page<Product> getAllProductPage(Pageable pageable);
 }
