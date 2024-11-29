@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
         product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
     }
 
-    public Product checkExistUser(Long idProduct) {
+    public Product checkExistProduct(Long idProduct) {
         Optional<Product> product = findById(idProduct);
         if (product.isEmpty()) {
             throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);

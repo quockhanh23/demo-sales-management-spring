@@ -24,7 +24,7 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody User user) {
         userService.validateUser(user);
         userService.save(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @GetMapping("/changeStatus")

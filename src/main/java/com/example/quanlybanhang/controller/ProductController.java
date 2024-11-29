@@ -1,9 +1,7 @@
 package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.common.CommonUtils;
-import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.dto.ProductDTO;
-import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
@@ -17,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -33,7 +30,7 @@ public class ProductController {
         userService.checkRoleAdmin(idUser);
         productService.validateProduct(product);
         productService.save(product);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/update-status-product")
@@ -41,13 +38,10 @@ public class ProductController {
                                                  @RequestParam Long idProduct,
                                                  @RequestParam Long idUser) {
         userService.checkRoleAdmin(idUser);
-        Optional<Product> productOptional = productService.findById(idProduct);
-        if (productOptional.isEmpty()) {
-            throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
-        }
-        productOptional.get().setStatus(status);
-        productService.save(productOptional.get());
-        return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
+        Product product = productService.checkExistProduct(idProduct);
+        product.setStatus(status);
+        productService.save(product);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PutMapping("/update-product")
@@ -55,28 +49,22 @@ public class ProductController {
                                                       @RequestParam Long idProduct,
                                                       @RequestParam Long idUser) {
         userService.checkRoleAdmin(idUser);
-        Optional<Product> productOptional = productService.findById(idProduct);
-        if (productOptional.isEmpty()) {
-            throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
-        }
-        productOptional.get().setStatus(product.getStatus());
-        productOptional.get().setProductName(product.getProductName());
-        productOptional.get().setQuantity(product.getQuantity());
-        productOptional.get().setPrice(product.getPrice());
-        productService.save(productOptional.get());
-        return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
+        Product productUpdate = productService.checkExistProduct(idProduct);
+        productUpdate.setStatus(product.getStatus());
+        productUpdate.setProductName(product.getProductName());
+        productUpdate.setQuantity(product.getQuantity());
+        productUpdate.setPrice(product.getPrice());
+        productService.save(productUpdate);
+        return new ResponseEntity<>(productUpdate, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-product")
     public ResponseEntity<?> deleteProduct(@RequestParam Long idProduct, @RequestParam Long idUser) {
         try {
             userService.checkRoleAdmin(idUser);
-            Optional<Product> productOptional = productService.findById(idProduct);
-            if (productOptional.isEmpty()) {
-                throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
-            }
-            productOptional.get().setDelete(true);
-            productService.save(productOptional.get());
+            Product product = productService.checkExistProduct(idProduct);
+            product.setDelete(true);
+            productService.save(product);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +83,7 @@ public class ProductController {
 
     @GetMapping("/detailProduct")
     public ResponseEntity<?> getDetailProduct(@RequestParam Long idProduct) throws IOException {
-        Product product = productService.checkExistUser(idProduct);
+        Product product = productService.checkExistProduct(idProduct);
         ProductDTO productDTO = new ProductDTO();
         BeanUtils.copyProperties(product, productDTO);
         productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));

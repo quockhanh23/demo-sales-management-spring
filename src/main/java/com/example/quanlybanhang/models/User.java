@@ -29,4 +29,5 @@ public class User {
     private String status;
     private String role;
     private boolean buyer;
+    private String avatar;
 }

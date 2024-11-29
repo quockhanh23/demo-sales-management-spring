@@ -48,6 +48,6 @@ public class CommentController {
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteComment(@RequestParam Long idComment) {
         commentService.delete(idComment);
-        return new ResponseEntity<>("Đã xóa bình luận", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

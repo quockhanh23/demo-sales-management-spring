@@ -55,7 +55,6 @@ public class UploadFileController {
     @GetMapping("/images/{fileName}")
     public ResponseEntity<?> getImage(@PathVariable("fileName") String fileName) {
         try {
-            // Thao tác với các tệp tin và thư mục trên hệ thống tệp tin của máy tính
             File file = new File("E:/images/" + fileName);
             byte[] imageBytes = Files.readAllBytes(file.toPath());
             HttpHeaders headers = new HttpHeaders();
@@ -69,7 +68,6 @@ public class UploadFileController {
     public void directoryCreate() {
         File dir = new File("E:/images/");
         if (!dir.exists()) {
-            // Nếu thư mục chưa tồn tại
             if (dir.mkdir()) {
                 System.out.println("Directory is created!");
             } else {

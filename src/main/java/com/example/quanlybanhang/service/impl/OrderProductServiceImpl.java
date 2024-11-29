@@ -87,10 +87,12 @@ public class OrderProductServiceImpl implements OrderProductService {
             orderProductDetail.setQuantity(1);
             orderProductDetail.setPrice(Integer.parseInt(product.get().getPrice()));
 
-            Optional<OrderProduct> optional = orderProductRepository
+            Optional<OrderProduct> orderProductOptional = orderProductRepository
                     .findAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
-            orderProductDetail.setIdOrderProduct(optional.get().getId());
-            optional.get().setProductDetails(Collections.singletonList(orderProductDetail));
+            if (orderProductOptional.isPresent()) {
+                orderProductDetail.setIdOrderProduct(orderProductOptional.get().getId());
+                orderProductOptional.get().setProductDetails(Collections.singletonList(orderProductDetail));
+            }
         } else {
             orderProduct = optionalOrderProduct.get();
             List<OrderProductDetail> list = orderProduct.getProductDetails();

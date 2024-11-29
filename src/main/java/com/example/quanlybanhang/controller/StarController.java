@@ -42,7 +42,6 @@ public class StarController {
     public ResponseEntity<?> create(@RequestParam Long idProduct,
                                     @RequestParam Long idUser,
                                     @RequestParam String type) {
-
         Star star = starService.initStar(idUser, idProduct, type);
         starService.save(star);
         return new ResponseEntity<>(HttpStatus.OK);

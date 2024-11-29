@@ -22,7 +22,7 @@ public interface ProductService {
 
     void validateProduct(Product product);
 
-    Product checkExistUser(Long idProduct);
+    Product checkExistProduct(Long idProduct);
 
     Page<ProductDTO> getAllProductPage(Pageable pageable) throws IOException;
 }

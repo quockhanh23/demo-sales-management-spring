@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void delete(Long id) {
         if (null == id) {
-            throw new BadRequestException("Không có id");
+            throw new BadRequestException("id null");
         }
         commentRepository.deleteById(id);
     }
