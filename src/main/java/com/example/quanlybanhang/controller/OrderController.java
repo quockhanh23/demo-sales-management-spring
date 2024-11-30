@@ -40,6 +40,30 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/decrease-product")
+    public ResponseEntity<?> decreaseProduct(@RequestParam Long idUser,
+                                             @RequestParam Long idProduct) {
+        try {
+            orderProductService.decreaseProduct(idUser, idProduct);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/increase-product")
+    public ResponseEntity<?> increaseProduct(@RequestParam Long idUser,
+                                             @RequestParam Long idProduct) {
+        try {
+            orderProductService.increaseProduct(idUser, idProduct);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/all-in-cart")
     public ResponseEntity<?> getAllProductInCart(@RequestParam Long idUser) {
         OrderProductDTO getAllProductInCart;
@@ -67,7 +91,7 @@ public class OrderController {
 
     @GetMapping("/count-order")
     public ResponseEntity<?> countOrder(@RequestParam Long idUser) {
-        long count = 0;
+        long count;
         try {
             count = orderProductService.countAllByUser(idUser);
         } catch (Exception e) {

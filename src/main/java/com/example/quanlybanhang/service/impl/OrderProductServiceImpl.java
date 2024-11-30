@@ -41,16 +41,6 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public void save(OrderProduct orderProduct) {
-        orderProductRepository.save(orderProduct);
-    }
-
-    @Override
-    public void delete(Long id) {
-        orderProductRepository.deleteById(id);
-    }
-
-    @Override
     public OrderProduct checkExistOrderProduct(Long idOrder) {
         Optional<OrderProduct> optionalOrderProduct = findById(idOrder);
         if (optionalOrderProduct.isEmpty()) {
@@ -90,7 +80,6 @@ public class OrderProductServiceImpl implements OrderProductService {
             orderProduct.setStatus(SalesManagementConstants.STATUS_ORDER_PENDING);
             orderProductRepository.save(orderProduct);
 
-            orderProductDetail.setQuantity(1);
             orderProductDetail.setPrice(product.get().getPrice());
 
             Optional<OrderProduct> orderProductOptional = orderProductRepository
@@ -103,7 +92,6 @@ public class OrderProductServiceImpl implements OrderProductService {
             orderProduct = optionalOrderProduct.get();
             List<OrderProductDetail> list = orderProduct.getProductDetails();
             orderProductDetail.setIdOrderProduct(orderProduct.getId());
-            orderProductDetail.setQuantity(1);
             orderProductDetail.setPrice(product.get().getPrice());
             list.add(orderProductDetail);
             orderProductRepository.save(orderProduct);
@@ -130,12 +118,49 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     public void decreaseProduct(Long idUser, Long idProduct) {
-
+        OrderProduct orderProduct = checkOrderProduct(idUser);
+        if (Objects.isNull(orderProduct)) throw new BadRequestException(MessageConstants.NOT_FOUND_ORDER);
+        List<OrderProductDetail> productDetails = orderProduct.getProductDetails();
+        List<OrderProductDetail> productInCart = productDetails
+                .stream()
+                .filter(item -> item.getStatus().equals(OrderProductDetailStatus.IN_CART)
+                        && item.getIdProduct().equals(idProduct)).toList();
+        if (CollectionUtils.isEmpty(productInCart)) return;
+        if (productDetails.size() == 1) {
+            removeToCart(idUser, idProduct);
+        } else {
+            Optional<Product> product = productService.findById(idProduct);
+            if (product.isEmpty()) throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
+            OrderProductDetail orderProductDetail = productInCart.get(productInCart.size() - 1);
+            orderProductDetail.setUpdatedAt(new Date());
+            orderProductDetail.setStatus(OrderProductDetailStatus.OUT_CART);
+            productDetails.remove(orderProductDetail);
+            orderProductRepository.save(orderProduct);
+        }
     }
 
     @Override
     public void increaseProduct(Long idUser, Long idProduct) {
+        OrderProduct orderProduct = checkOrderProduct(idUser);
+        if (Objects.isNull(orderProduct)) throw new BadRequestException(MessageConstants.NOT_FOUND_ORDER);
+        List<OrderProductDetail> productDetails = orderProduct.getProductDetails();
+        if (CollectionUtils.isEmpty(productDetails)) return;
+        Optional<Product> product = productService.findById(idProduct);
+        if (product.isEmpty()) throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
+        OrderProductDetail orderProductDetail = initOrderProductDetail(product.get());
+        orderProductDetail.setQuantity(product.get().getQuantity());
+        orderProductDetail.setStatus(OrderProductDetailStatus.IN_CART);
+        orderProductDetail.setIdOrderProduct(orderProduct.getId());
+        orderProductDetail.setPrice(product.get().getPrice());
+        productDetails.add(orderProductDetail);
+        orderProductRepository.save(orderProduct);
+    }
 
+    private OrderProduct checkOrderProduct(Long idUser) {
+        User user = userService.checkExistUser(idUser);
+        List<OrderProduct> orderProductList = orderProductRepository.getAllByUser(user);
+        if (CollectionUtils.isEmpty(orderProductList)) return null;
+        return orderProductList.get(0);
     }
 
     @Override
@@ -198,6 +223,7 @@ public class OrderProductServiceImpl implements OrderProductService {
         OrderProductDetail orderProductDetail = new OrderProductDetail();
         orderProductDetail.setIdProduct(product.getIdProduct());
         orderProductDetail.setCreatedAt(new Date());
+        orderProductDetail.setQuantity(1);
         return orderProductDetail;
     }
 }

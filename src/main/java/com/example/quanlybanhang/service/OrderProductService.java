@@ -11,10 +11,6 @@ public interface OrderProductService {
 
     Optional<OrderProduct> findById(Long id);
 
-    void save(OrderProduct orderProduct);
-
-    void delete(Long id);
-
     OrderProduct checkExistOrderProduct(Long idOrder);
 
     long countAllByUser(Long idUser);
