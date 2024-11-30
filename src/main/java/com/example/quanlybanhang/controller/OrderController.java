@@ -1,18 +1,12 @@
 package com.example.quanlybanhang.controller;
 
-import com.example.quanlybanhang.constant.MessageConstants;
-import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.dto.OrderProductDTO;
 import com.example.quanlybanhang.dto.ProductDTO;
-import com.example.quanlybanhang.exeption.BadRequestException;
-import com.example.quanlybanhang.models.OrderProduct;
 import com.example.quanlybanhang.service.OrderProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @CrossOrigin("*")
@@ -29,6 +23,7 @@ public class OrderController {
             orderProductService.addToCart(idUser, productDTO);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -40,17 +35,19 @@ public class OrderController {
             orderProductService.removeToCart(idUser, idProduct);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/all-in-cart")
     public ResponseEntity<?> getAllProductInCart(@RequestParam Long idUser) {
-        OrderProductDTO getAllProductInCart = new OrderProductDTO();
+        OrderProductDTO getAllProductInCart;
         try {
             getAllProductInCart = orderProductService.getAllProductInCart(idUser);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(getAllProductInCart, HttpStatus.OK);
     }
@@ -59,21 +56,24 @@ public class OrderController {
     public ResponseEntity<?> changeStatus(@RequestParam String status,
                                           @RequestParam Long idOrderProduct,
                                           @RequestParam Long idUser) {
-        OrderProduct orderProduct = orderProductService.checkExistOrderProduct(idOrderProduct);
-        if (!orderProduct.getUser().getId().equals(idUser)) {
-            throw new BadRequestException(MessageConstants.ORDER_IS_NOT_OF_USE);
+        try {
+            orderProductService.changeStatus(idOrderProduct, idUser, status);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if (SalesManagementConstants.STATUS_ORDER_BOUGHT.equals(orderProduct.getStatus())) {
-            throw new BadRequestException(MessageConstants.ORDER_HAS_BEEN_COMPLETED);
-        }
-        orderProduct.setStatus(status);
-        orderProduct.setUpdatedAt(new Date());
-        orderProductService.save(orderProduct);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/count-order")
     public ResponseEntity<?> countOrder(@RequestParam Long idUser) {
-        return new ResponseEntity<>(orderProductService.countAllByUser(idUser), HttpStatus.OK);
+        long count = 0;
+        try {
+            count = orderProductService.countAllByUser(idUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }

@@ -76,7 +76,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     public void addToCart(Long idUser, ProductDTO productDTO) {
         User user = userService.checkExistUser(idUser);
         Optional<Product> product = productService.findById(productDTO.getId());
-        if (product.isEmpty()) throw new BadRequestException("Sản phẩm này không tồn tại");
+        if (product.isEmpty()) throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
         Optional<OrderProduct> optionalOrderProduct = orderProductRepository
                 .findAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
         OrderProduct orderProduct;
@@ -178,6 +178,20 @@ public class OrderProductServiceImpl implements OrderProductService {
         orderProductDTO.setStatus(orderProduct.getStatus());
         orderProductDTO.setOrderProductDetailDTOList(productDetailDTOList);
         return orderProductDTO;
+    }
+
+    @Override
+    public void changeStatus(Long idOrderProduct, Long idUser, String status) {
+        OrderProduct orderProduct = checkExistOrderProduct(idOrderProduct);
+        if (!orderProduct.getUser().getId().equals(idUser)) {
+            throw new BadRequestException(MessageConstants.ORDER_IS_NOT_OF_USE);
+        }
+        if (SalesManagementConstants.STATUS_ORDER_BOUGHT.equals(orderProduct.getStatus())) {
+            throw new BadRequestException(MessageConstants.ORDER_HAS_BEEN_COMPLETED);
+        }
+        orderProduct.setStatus(status);
+        orderProduct.setUpdatedAt(new Date());
+        orderProductRepository.save(orderProduct);
     }
 
     private OrderProductDetail initOrderProductDetail(Product product) {

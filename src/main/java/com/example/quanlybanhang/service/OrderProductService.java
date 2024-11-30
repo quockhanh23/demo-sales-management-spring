@@ -28,4 +28,6 @@ public interface OrderProductService {
     void increaseProduct(Long idUser, Long idProduct);
 
     OrderProductDTO getAllProductInCart(Long idUser) throws IOException;
+
+    void changeStatus(Long idOrderProduct, Long idUser, String status);
 }
