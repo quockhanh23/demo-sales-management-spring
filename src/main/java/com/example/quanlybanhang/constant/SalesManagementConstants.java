@@ -9,6 +9,5 @@ public class SalesManagementConstants {
     public static final String STATUS_USER_BANED = "BANED";
     public static final String STATUS_ORDER_BOUGHT = "BOUGHT";
     public static final String STATUS_ORDER_PENDING = "PENDING";
-    public static final String SRC_IMAGE = "src/main/resources/static/images/";
     public static final String DEFAULT_NO_IMAGE = "no_image.png";
 }

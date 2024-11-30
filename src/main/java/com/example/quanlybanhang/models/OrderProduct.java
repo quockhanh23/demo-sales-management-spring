@@ -21,8 +21,8 @@ public class OrderProduct {
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
-    private Date createAt;
-    private Date editAt;
+    private Date createdAt;
+    private Date updatedAt;
     private String status;
 
     @ManyToMany(cascade = CascadeType.ALL)

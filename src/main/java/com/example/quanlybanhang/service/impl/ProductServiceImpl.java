@@ -3,6 +3,7 @@ package com.example.quanlybanhang.service.impl;
 import com.example.quanlybanhang.common.CommonUtils;
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
+import com.example.quanlybanhang.constant.UploadFileConstant;
 import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.exeption.BadRequestException;
 import com.example.quanlybanhang.models.Product;
@@ -60,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
             throw new BadRequestException(MessageConstants.PRODUCT_QUANTITY_MUST_GREAT_THAN_ZERO);
         }
         if (StringUtils.isEmpty(product.getImage())) {
-            product.setImage(SalesManagementConstants.SRC_IMAGE + SalesManagementConstants.DEFAULT_NO_IMAGE);
+            product.setImage(UploadFileConstant.SRC_IMAGE_PROJECT + SalesManagementConstants.DEFAULT_NO_IMAGE);
         }
         if (product.getDescription().length() > 50) {
             throw new BadRequestException(MessageConstants.PRODUCT_DESCRIPTION_MAX_SIZE);

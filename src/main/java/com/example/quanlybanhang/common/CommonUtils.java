@@ -1,6 +1,7 @@
 package com.example.quanlybanhang.common;
 
 import com.example.quanlybanhang.constant.SalesManagementConstants;
+import com.example.quanlybanhang.constant.UploadFileConstant;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ public class CommonUtils {
         if (StringUtils.isNotEmpty(image)) {
             return Files.readAllBytes(Paths.get(image));
         } else {
-            String defaultImageURL = SalesManagementConstants.SRC_IMAGE + SalesManagementConstants.DEFAULT_NO_IMAGE;
+            String defaultImageURL = UploadFileConstant.SRC_IMAGE_PROJECT + SalesManagementConstants.DEFAULT_NO_IMAGE;
             return Files.readAllBytes(Paths.get(defaultImageURL));
         }
     }

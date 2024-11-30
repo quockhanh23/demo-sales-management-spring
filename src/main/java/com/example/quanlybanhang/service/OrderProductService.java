@@ -21,5 +21,11 @@ public interface OrderProductService {
 
     void addToCart(Long idUser, ProductDTO productDTO);
 
+    void removeToCart(Long idUser, Long idProduct);
+
+    void decreaseProduct(Long idUser, Long idProduct);
+
+    void increaseProduct(Long idUser, Long idProduct);
+
     OrderProductDTO getAllProductInCart(Long idUser) throws IOException;
 }

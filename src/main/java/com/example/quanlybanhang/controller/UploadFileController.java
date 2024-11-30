@@ -1,6 +1,7 @@
 package com.example.quanlybanhang.controller;
 
-
+import com.example.quanlybanhang.constant.UploadFileConstant;
+import com.example.quanlybanhang.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @RestController
 @CrossOrigin("*")
@@ -22,13 +21,15 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class UploadFileController {
 
-    // Phải tạo thư mục lưu trữ trước
-    @PostMapping("/upload2")
+    private final UploadFileService uploadFileService;
+
+    @PostMapping("/uploadInProject")
     public ResponseEntity<?> uploadInProject(@RequestParam("file") MultipartFile image) {
         String fileName = image.getOriginalFilename();
-        directoryCreateInProject();
+        uploadFileService.directoryCreateInProject();
+        fileName = uploadFileService.convertFileName(fileName);
         try {
-            File uploadFile = new File("src/main/resources/static/images/" + convertFileName(fileName));
+            File uploadFile = new File(UploadFileConstant.SRC_IMAGE_PROJECT + fileName);
             FileCopyUtils.copy(image.getBytes(), uploadFile);
             return new ResponseEntity<>(uploadFile, HttpStatus.OK);
         } catch (IOException ex) {
@@ -37,12 +38,13 @@ public class UploadFileController {
         }
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile image) {
+    @PostMapping("/uploadInDriveStorage")
+    public ResponseEntity<?> uploadInDriveStorage(@RequestParam("file") MultipartFile image) {
         String fileName = image.getOriginalFilename();
-        directoryCreate();
+        uploadFileService.directoryCreateInHardDrive();
+        fileName = uploadFileService.convertFileName(fileName);
         try {
-            FileCopyUtils.copy(image.getBytes(), new File("E:/images/" + fileName));
+            FileCopyUtils.copy(image.getBytes(), new File(UploadFileConstant.SRC_IMAGE_HARD_DRIVE + fileName));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -50,49 +52,17 @@ public class UploadFileController {
         }
     }
 
-    // Hiển thị ảnh trên localHost
-    // Tên file phải có cả đuôi file ví dụ: image.jpg
     @GetMapping("/images/{fileName}")
     public ResponseEntity<?> getImage(@PathVariable("fileName") String fileName) {
         try {
-            File file = new File("E:/images/" + fileName);
+            File file = new File(UploadFileConstant.SRC_IMAGE_HARD_DRIVE + fileName);
             byte[] imageBytes = Files.readAllBytes(file.toPath());
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_JPEG);
             return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    public void directoryCreate() {
-        File dir = new File("E:/images/");
-        if (!dir.exists()) {
-            if (dir.mkdir()) {
-                System.out.println("Directory is created!");
-            } else {
-                System.out.println("Directory already exists");
-                System.out.println("Failed to create directory!");
-            }
-        }
-    }
-
-    public void directoryCreateInProject() {
-        File dir = new File("src/main/resources/static/images/");
-        if (!dir.exists()) {
-            if (dir.mkdir()) {
-                System.out.println("Directory is created!");
-            } else {
-                System.out.println("Directory already exists");
-                System.out.println("Failed to create directory!");
-            }
-        }
-    }
-
-    public String convertFileName(String fileName) {
-        if (null == fileName) return "";
-        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HHmmss");
-        return sdf.format(new Date()) + fileExtension;
     }
 }

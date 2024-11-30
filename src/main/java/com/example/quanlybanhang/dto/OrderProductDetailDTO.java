@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class OrderProductDetailDTO {
+    private Long id;
     private Long idOrderProduct;
     private Long idProduct;
     private int quantity;

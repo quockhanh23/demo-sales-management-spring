@@ -1,5 +1,6 @@
 package com.example.quanlybanhang.models;
 
+import com.example.quanlybanhang.common.OrderProductDetailStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,8 @@ public class OrderProductDetail {
     private Long idOrderProduct;
     private Long idProduct;
     private int quantity;
-    private Date createAt;
-    private double price;
+    private Date createdAt;
+    private Date updatedAt;
+    private String price;
+    private OrderProductDetailStatus status;
 }

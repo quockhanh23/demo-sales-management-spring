@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Date;
 
 @RestController
@@ -34,9 +33,25 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/remove-from-cart")
+    public ResponseEntity<?> removeFromCart(@RequestParam Long idUser,
+                                            @RequestParam Long idProduct) {
+        try {
+            orderProductService.removeToCart(idUser, idProduct);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/all-in-cart")
-    public ResponseEntity<?> getAllProductInCart(@RequestParam Long idUser) throws IOException {
-        OrderProductDTO getAllProductInCart = orderProductService.getAllProductInCart(idUser);
+    public ResponseEntity<?> getAllProductInCart(@RequestParam Long idUser) {
+        OrderProductDTO getAllProductInCart = new OrderProductDTO();
+        try {
+            getAllProductInCart = orderProductService.getAllProductInCart(idUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return new ResponseEntity<>(getAllProductInCart, HttpStatus.OK);
     }
 
@@ -52,7 +67,7 @@ public class OrderController {
             throw new BadRequestException(MessageConstants.ORDER_HAS_BEEN_COMPLETED);
         }
         orderProduct.setStatus(status);
-        orderProduct.setEditAt(new Date());
+        orderProduct.setUpdatedAt(new Date());
         orderProductService.save(orderProduct);
         return new ResponseEntity<>(HttpStatus.OK);
     }
