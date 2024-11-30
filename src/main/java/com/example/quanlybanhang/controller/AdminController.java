@@ -3,7 +3,7 @@ package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
-import com.example.quanlybanhang.exeption.BadRequestException;
+import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.repository.UserRepository;
 import com.example.quanlybanhang.service.UserService;
@@ -28,7 +28,7 @@ public class AdminController {
     public ResponseEntity<?> getAllUser(@RequestParam Long idUser) {
         User admin = userService.checkExistUser(idUser);
         if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
-            throw new BadRequestException(MessageConstants.NOT_ADMIN);
+            throw new InvalidException(MessageConstants.NOT_ADMIN);
         }
         List<User> userList = userRepository.findAll();
         if (!CollectionUtils.isEmpty(userList)) {
@@ -37,27 +37,16 @@ public class AdminController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-    @GetMapping("/banner")
-    public ResponseEntity<?> banUser(@RequestParam Long idAdmin, @RequestParam Long idUser) {
-        User admin = userService.checkExistUser(idAdmin);
-        if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
-            throw new BadRequestException(MessageConstants.NOT_ADMIN);
+    @GetMapping("/user-action")
+    public ResponseEntity<?> userAction(@RequestParam Long idAdmin,
+                                        @RequestParam Long idUser,
+                                        @RequestParam String type) {
+        if (SalesManagementConstants.STATUS_ACTIVE.equalsIgnoreCase(type)) {
+            userService.unbanUser(idAdmin, idUser);
         }
-        User user = userService.checkExistUser(idUser);
-        user.setStatus(SalesManagementConstants.STATUS_USER_BANED);
-        userService.save(user);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/un-ban-user")
-    public ResponseEntity<?> unbanUser(@RequestParam Long idAdmin, @RequestParam Long idUser) {
-        User admin = userService.checkExistUser(idAdmin);
-        if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
-            throw new BadRequestException(MessageConstants.NOT_ADMIN);
+        if (SalesManagementConstants.STATUS_USER_BANED.equalsIgnoreCase(type)) {
+            userService.banUser(idAdmin, idUser);
         }
-        User user = userService.checkExistUser(idUser);
-        user.setStatus(SalesManagementConstants.STATUS_ACTIVE);
-        userService.save(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

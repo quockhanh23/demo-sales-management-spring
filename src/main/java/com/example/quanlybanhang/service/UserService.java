@@ -8,8 +8,6 @@ public interface UserService {
 
     Optional<User> findById(Long id);
 
-    void save(User user);
-
     void delete(Long id);
 
     void checkLogin(String username, String password);
@@ -25,4 +23,8 @@ public interface UserService {
     void checkBannerUser(String username);
 
     User checkExistUser(Long idUser);
+
+    void banUser(Long idAdmin, Long idUser);
+
+    void unbanUser(Long idAdmin, Long idUser);
 }

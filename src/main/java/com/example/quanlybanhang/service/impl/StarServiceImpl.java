@@ -1,6 +1,6 @@
 package com.example.quanlybanhang.service.impl;
 
-import com.example.quanlybanhang.exeption.BadRequestException;
+import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.Star;
 import com.example.quanlybanhang.repository.StarRepository;
 import com.example.quanlybanhang.service.StarService;
@@ -59,7 +59,7 @@ public class StarServiceImpl implements StarService {
             }
         }
         if (count == 5) {
-            throw new BadRequestException("Chỉ có thể đánh giá từ 1 đến 5 sao");
+            throw new InvalidException("Chỉ có thể đánh giá từ 1 đến 5 sao");
         }
         Star star = new Star();
         star.setNumberOfStars(type);

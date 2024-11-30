@@ -5,7 +5,7 @@ import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.constant.UploadFileConstant;
 import com.example.quanlybanhang.dto.ProductDTO;
-import com.example.quanlybanhang.exeption.BadRequestException;
+import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.repository.ProductRepository;
 import com.example.quanlybanhang.service.ProductService;
@@ -52,19 +52,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void validateProduct(Product product) {
         if (StringUtils.isEmpty(product.getProductName())) {
-            throw new BadRequestException(MessageConstants.PRODUCT_NAME_NOT_EMPTY);
+            throw new InvalidException(MessageConstants.PRODUCT_NAME_NOT_EMPTY);
         }
         if (StringUtils.isEmpty(product.getPrice())) {
-            throw new BadRequestException(MessageConstants.PRODUCT_PRICE_NOT_EMPTY);
+            throw new InvalidException(MessageConstants.PRODUCT_PRICE_NOT_EMPTY);
         }
         if (product.getQuantity() <= 0) {
-            throw new BadRequestException(MessageConstants.PRODUCT_QUANTITY_MUST_GREAT_THAN_ZERO);
+            throw new InvalidException(MessageConstants.PRODUCT_QUANTITY_MUST_GREAT_THAN_ZERO);
         }
         if (StringUtils.isEmpty(product.getImage())) {
             product.setImage(UploadFileConstant.SRC_IMAGE_PROJECT + SalesManagementConstants.DEFAULT_NO_IMAGE);
         }
         if (product.getDescription().length() > 50) {
-            throw new BadRequestException(MessageConstants.PRODUCT_DESCRIPTION_MAX_SIZE);
+            throw new InvalidException(MessageConstants.PRODUCT_DESCRIPTION_MAX_SIZE);
         }
         product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
     }
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     public Product checkExistProduct(Long idProduct) {
         Optional<Product> product = findById(idProduct);
         if (product.isEmpty()) {
-            throw new BadRequestException(MessageConstants.NOT_FOUND_PRODUCT);
+            throw new InvalidException(MessageConstants.NOT_FOUND_PRODUCT);
         } else {
             return product.get();
         }

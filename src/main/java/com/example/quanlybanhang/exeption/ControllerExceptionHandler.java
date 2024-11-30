@@ -18,8 +18,8 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorMessage> badRequestException(BadRequestException exception, WebRequest request) {
+    @ExceptionHandler(InvalidException.class)
+    public ResponseEntity<ErrorMessage> badRequestException(InvalidException exception, WebRequest request) {
         ErrorMessage message = new ErrorMessage();
         message.setStatusCode(HttpStatus.BAD_REQUEST.value());
         message.setMessage(exception.getMessage());

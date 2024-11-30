@@ -1,7 +1,7 @@
 package com.example.quanlybanhang.service.impl;
 
 import com.example.quanlybanhang.dto.CommentDTO;
-import com.example.quanlybanhang.exeption.BadRequestException;
+import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.Comment;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.models.User;
@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void delete(Long id) {
         if (null == id) {
-            throw new BadRequestException("id null");
+            throw new InvalidException("id null");
         }
         commentRepository.deleteById(id);
     }
@@ -62,15 +62,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment validateCommentAndInit(CommentDTO commentDTO) {
         if (null == commentDTO.getIdProduct() || null == commentDTO.getIdUser()) {
-            throw new BadRequestException("không có id người dùng hoặc id sản phẩm");
+            throw new InvalidException("không có id người dùng hoặc id sản phẩm");
         }
         if (StringUtils.isEmpty(commentDTO.getContent())) {
-            throw new BadRequestException("Không có nội dung");
+            throw new InvalidException("Không có nội dung");
         }
         User user = userService.checkExistUser(commentDTO.getIdUser());
         Optional<Product> productOptional = productService.findById(commentDTO.getIdProduct());
         if (productOptional.isEmpty()) {
-            throw new BadRequestException("không tìm thấy người dùng hoặc sản phẩm");
+            throw new InvalidException("không tìm thấy người dùng hoặc sản phẩm");
         }
         Comment comment = new Comment();
         comment.setCreateDate(new Date());

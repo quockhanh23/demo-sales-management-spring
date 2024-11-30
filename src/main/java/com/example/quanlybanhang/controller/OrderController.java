@@ -2,6 +2,7 @@ package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.dto.OrderProductDTO;
 import com.example.quanlybanhang.dto.ProductDTO;
+import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.service.OrderProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,11 +22,14 @@ public class OrderController {
                                        @RequestBody ProductDTO productDTO) {
         try {
             orderProductService.addToCart(idUser, productDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/remove-from-cart")
@@ -33,11 +37,14 @@ public class OrderController {
                                             @RequestParam Long idProduct) {
         try {
             orderProductService.removeToCart(idUser, idProduct);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/decrease-product")
@@ -45,11 +52,14 @@ public class OrderController {
                                              @RequestParam Long idProduct) {
         try {
             orderProductService.decreaseProduct(idUser, idProduct);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/increase-product")
@@ -57,11 +67,14 @@ public class OrderController {
                                              @RequestParam Long idProduct) {
         try {
             orderProductService.increaseProduct(idUser, idProduct);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/all-in-cart")
@@ -69,11 +82,14 @@ public class OrderController {
         OrderProductDTO getAllProductInCart;
         try {
             getAllProductInCart = orderProductService.getAllProductInCart(idUser);
+            return new ResponseEntity<>(getAllProductInCart, HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(getAllProductInCart, HttpStatus.OK);
     }
 
     @GetMapping("/change-status")
@@ -82,22 +98,27 @@ public class OrderController {
                                           @RequestParam Long idUser) {
         try {
             orderProductService.changeStatus(idOrderProduct, idUser, status);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/count-order")
     public ResponseEntity<?> countOrder(@RequestParam Long idUser) {
-        long count;
         try {
-            count = orderProductService.countAllByUser(idUser);
+            long count = orderProductService.countAllByUser(idUser);
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }
