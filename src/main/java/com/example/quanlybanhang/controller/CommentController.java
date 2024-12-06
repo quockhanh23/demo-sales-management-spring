@@ -42,7 +42,7 @@ public class CommentController {
     @PostMapping("/create")
     public ResponseEntity<Object> createComment(@RequestBody CommentDTO commentDTO) {
         try {
-            Comment comment = commentService.validateCommentAndInit(commentDTO);
+            Comment comment = commentService.createComment(commentDTO);
             commentService.save(comment);
             return new ResponseEntity<>(comment, HttpStatus.CREATED);
         } catch (InvalidException e) {

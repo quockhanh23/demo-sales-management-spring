@@ -28,7 +28,7 @@ public class User {
     private String pin;
     private String status;
     private String role;
-    private boolean buyer;
+    private boolean isBuyer;
     private String avatar;
     private Date createdAt;
     private Date updatedAt;

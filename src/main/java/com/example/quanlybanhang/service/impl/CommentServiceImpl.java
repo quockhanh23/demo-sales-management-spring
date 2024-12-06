@@ -60,13 +60,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment validateCommentAndInit(CommentDTO commentDTO) {
-        if (null == commentDTO.getIdProduct() || null == commentDTO.getIdUser()) {
-            throw new InvalidException("không có id người dùng hoặc id sản phẩm");
-        }
-        if (StringUtils.isEmpty(commentDTO.getContent())) {
-            throw new InvalidException("Không có nội dung");
-        }
+    public Comment createComment(CommentDTO commentDTO) {
+        validateComment(commentDTO);
         User user = userService.checkExistUser(commentDTO.getIdUser());
         Optional<Product> productOptional = productService.findById(commentDTO.getIdProduct());
         if (productOptional.isEmpty()) {
@@ -78,5 +73,14 @@ public class CommentServiceImpl implements CommentService {
         comment.setProduct(productOptional.get());
         comment.setUser(user);
         return comment;
+    }
+
+    private void validateComment(CommentDTO commentDTO) {
+        if (null == commentDTO.getIdProduct() || null == commentDTO.getIdUser()) {
+            throw new InvalidException("không có id người dùng hoặc id sản phẩm");
+        }
+        if (StringUtils.isEmpty(commentDTO.getContent())) {
+            throw new InvalidException("Không có nội dung");
+        }
     }
 }

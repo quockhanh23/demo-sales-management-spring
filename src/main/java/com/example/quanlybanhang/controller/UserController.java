@@ -1,7 +1,7 @@
 package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.constant.MessageConstants;
-import com.example.quanlybanhang.dto.UserDTO;
+import com.example.quanlybanhang.dto.ResetPassword;
 import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.service.UserService;
@@ -82,7 +82,7 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Object> resetPassword(@RequestBody UserDTO user) {
+    public ResponseEntity<Object> resetPassword(@RequestBody ResetPassword user) {
         try {
             userService.resetPassword(user.getUsername(), user.getPin(),
                     user.getNewPassword(), user.getConfirmPassword());
