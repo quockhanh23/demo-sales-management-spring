@@ -21,26 +21,26 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/get-comment-by-user")
-    public ResponseEntity<?> getAllCommentByUser(@RequestParam Long idUser) {
+    public ResponseEntity<Object> getAllCommentByUser(@RequestParam Long idUser) {
         List<Comment> list = commentService.findAllCommentByUserId(idUser);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping("/get-comment-by-product")
-    public ResponseEntity<?> getAllCommentByProduct(@RequestParam Long idProduct) {
+    public ResponseEntity<Object> getAllCommentByProduct(@RequestParam Long idProduct) {
         List<Comment> list = commentService.findAllCommentByProductId(idProduct);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping("/get-comment")
-    public ResponseEntity<?> getAllCommentByProductAndUser(@RequestParam Long idProduct,
-                                                           @RequestParam Long idUer) {
+    public ResponseEntity<Object> getAllCommentByProductAndUser(@RequestParam Long idProduct,
+                                                                @RequestParam Long idUer) {
         List<Comment> list = commentService.findAllCommentByProductIdAndUserId(idProduct, idUer);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createComment(@RequestBody CommentDTO commentDTO) {
+    public ResponseEntity<Object> createComment(@RequestBody CommentDTO commentDTO) {
         try {
             Comment comment = commentService.validateCommentAndInit(commentDTO);
             commentService.save(comment);
@@ -55,7 +55,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteComment(@RequestParam Long idComment) {
+    public ResponseEntity<Object> deleteComment(@RequestParam Long idComment) {
         try {
             commentService.delete(idComment);
             return new ResponseEntity<>(HttpStatus.OK);

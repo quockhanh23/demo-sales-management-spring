@@ -25,7 +25,7 @@ public class ProductController {
     private final UserService userService;
 
     @PostMapping("/create-product")
-    public ResponseEntity<?> createProduct(@RequestBody Product product, @RequestParam Long idUser) {
+    public ResponseEntity<Object> createProduct(@RequestBody Product product, @RequestParam Long idUser) {
         try {
             userService.checkRoleAdmin(idUser);
             productService.validateProduct(product);
@@ -41,9 +41,9 @@ public class ProductController {
     }
 
     @DeleteMapping("/update-status-product")
-    public ResponseEntity<?> updateStatusProduct(@RequestParam String status,
-                                                 @RequestParam Long idProduct,
-                                                 @RequestParam Long idUser) {
+    public ResponseEntity<Object> updateStatusProduct(@RequestParam String status,
+                                                      @RequestParam Long idProduct,
+                                                      @RequestParam Long idUser) {
         try {
             userService.checkRoleAdmin(idUser);
             Product product = productService.checkExistProduct(idProduct);
@@ -60,9 +60,9 @@ public class ProductController {
     }
 
     @PutMapping("/update-product")
-    public ResponseEntity<?> updateInformationProduct(@RequestBody Product product,
-                                                      @RequestParam Long idProduct,
-                                                      @RequestParam Long idUser) {
+    public ResponseEntity<Object> updateInformationProduct(@RequestBody Product product,
+                                                           @RequestParam Long idProduct,
+                                                           @RequestParam Long idUser) {
         try {
             userService.checkRoleAdmin(idUser);
             Product productUpdate = productService.checkExistProduct(idProduct);
@@ -82,7 +82,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete-product")
-    public ResponseEntity<?> deleteProduct(@RequestParam Long idProduct, @RequestParam Long idUser) {
+    public ResponseEntity<Object> deleteProduct(@RequestParam Long idProduct, @RequestParam Long idUser) {
         try {
             userService.checkRoleAdmin(idUser);
             Product product = productService.checkExistProduct(idProduct);
@@ -99,7 +99,7 @@ public class ProductController {
     }
 
     @GetMapping("/getAllProduct")
-    public ResponseEntity<?> getAllProductPage
+    public ResponseEntity<Object> getAllProductPage
             (@RequestParam(defaultValue = "0", required = false) int page,
              @RequestParam(defaultValue = "10", required = false) int size) {
         try {
@@ -113,7 +113,7 @@ public class ProductController {
     }
 
     @GetMapping("/detailProduct")
-    public ResponseEntity<?> getDetailProduct(@RequestParam Long idProduct) {
+    public ResponseEntity<Object> getDetailProduct(@RequestParam Long idProduct) {
         ProductDTO productDTO = new ProductDTO();
         try {
             Product product = productService.checkExistProduct(idProduct);

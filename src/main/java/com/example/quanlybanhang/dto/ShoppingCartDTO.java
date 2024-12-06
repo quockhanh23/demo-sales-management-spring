@@ -10,9 +10,9 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderProductDTO {
+public class ShoppingCartDTO {
     private Long idOrderProduct;
     private Date createAt;
     private String status;
-    private List<OrderProductDetailDTO> orderProductDetailDTOList;
+    private List<ShoppingCartDetailDTO> shoppingCartDetailDTOList;
 }

@@ -16,20 +16,16 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class User {
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
-    private String password;
-    private String confirmPassword;
-    private Date dateOfBirth;
-    private String phone;
-    private String pin;
-    private String status;
-    private String role;
-    private boolean buyer;
-    private String avatar;
     private Date createdAt;
     private Date updatedAt;
+    private String address;
+    private String province;
+    private String district;
+    private String ward;
+    private String street;
+    private Long idUser;
 }

@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,10 +21,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProduct;
     private String productName;
+    private String productType;
     private String price;
     private int quantity;
     private String status;
     private boolean isDelete;
     private String image;
     private String description;
+    private Date createdAt;
+    private Date updatedAt;
 }

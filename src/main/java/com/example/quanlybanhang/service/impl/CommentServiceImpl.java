@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
             throw new InvalidException("không tìm thấy người dùng hoặc sản phẩm");
         }
         Comment comment = new Comment();
-        comment.setCreateDate(new Date());
+        comment.setCreatedAt(new Date());
         comment.setContent(commentDTO.getContent());
         comment.setProduct(productOptional.get());
         comment.setUser(user);

@@ -1,9 +1,9 @@
 package com.example.quanlybanhang.controller;
 
-import com.example.quanlybanhang.dto.OrderProductDTO;
+import com.example.quanlybanhang.dto.ShoppingCartDTO;
 import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.exeption.InvalidException;
-import com.example.quanlybanhang.service.OrderProductService;
+import com.example.quanlybanhang.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
-public class OrderController {
+public class ShoppingCartController {
 
-    private final OrderProductService orderProductService;
+    private final ShoppingCartService shoppingCartService;
 
     @PostMapping("/add-to-cart")
-    public ResponseEntity<?> addToCart(@RequestParam Long idUser,
-                                       @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<Object> addToCart(@RequestParam Long idUser,
+                                            @RequestBody ProductDTO productDTO) {
         try {
-            orderProductService.addToCart(idUser, productDTO);
+            shoppingCartService.addToCart(idUser, productDTO);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();
@@ -33,10 +33,10 @@ public class OrderController {
     }
 
     @DeleteMapping("/remove-from-cart")
-    public ResponseEntity<?> removeFromCart(@RequestParam Long idUser,
-                                            @RequestParam Long idProduct) {
+    public ResponseEntity<Object> removeFromCart(@RequestParam Long idUser,
+                                                 @RequestParam Long idProduct) {
         try {
-            orderProductService.removeToCart(idUser, idProduct);
+            shoppingCartService.removeToCart(idUser, idProduct);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();
@@ -48,10 +48,10 @@ public class OrderController {
     }
 
     @GetMapping("/decrease-product")
-    public ResponseEntity<?> decreaseProduct(@RequestParam Long idUser,
-                                             @RequestParam Long idProduct) {
+    public ResponseEntity<Object> decreaseProduct(@RequestParam Long idUser,
+                                                  @RequestParam Long idProduct) {
         try {
-            orderProductService.decreaseProduct(idUser, idProduct);
+            shoppingCartService.decreaseProduct(idUser, idProduct);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();
@@ -63,10 +63,10 @@ public class OrderController {
     }
 
     @GetMapping("/increase-product")
-    public ResponseEntity<?> increaseProduct(@RequestParam Long idUser,
-                                             @RequestParam Long idProduct) {
+    public ResponseEntity<Object> increaseProduct(@RequestParam Long idUser,
+                                                  @RequestParam Long idProduct) {
         try {
-            orderProductService.increaseProduct(idUser, idProduct);
+            shoppingCartService.increaseProduct(idUser, idProduct);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();
@@ -78,10 +78,10 @@ public class OrderController {
     }
 
     @GetMapping("/all-in-cart")
-    public ResponseEntity<?> getAllProductInCart(@RequestParam Long idUser) {
-        OrderProductDTO getAllProductInCart;
+    public ResponseEntity<Object> getAllProductInCart(@RequestParam Long idUser) {
+        ShoppingCartDTO getAllProductInCart;
         try {
-            getAllProductInCart = orderProductService.getAllProductInCart(idUser);
+            getAllProductInCart = shoppingCartService.getAllProductInCart(idUser);
             return new ResponseEntity<>(getAllProductInCart, HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();
@@ -93,11 +93,11 @@ public class OrderController {
     }
 
     @GetMapping("/change-status")
-    public ResponseEntity<?> changeStatus(@RequestParam String status,
-                                          @RequestParam Long idOrderProduct,
-                                          @RequestParam Long idUser) {
+    public ResponseEntity<Object> changeStatus(@RequestParam String status,
+                                               @RequestParam Long idOrderProduct,
+                                               @RequestParam Long idUser) {
         try {
-            orderProductService.changeStatus(idOrderProduct, idUser, status);
+            shoppingCartService.changeStatus(idOrderProduct, idUser, status);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();
@@ -109,9 +109,9 @@ public class OrderController {
     }
 
     @GetMapping("/count-order")
-    public ResponseEntity<?> countOrder(@RequestParam Long idUser) {
+    public ResponseEntity<Object> countOrder(@RequestParam Long idUser) {
         try {
-            long count = orderProductService.countAllByUser(idUser);
+            long count = shoppingCartService.countAllByUser(idUser);
             return new ResponseEntity<>(count, HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();

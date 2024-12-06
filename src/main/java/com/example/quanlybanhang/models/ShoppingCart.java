@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OrderProduct {
+public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,8 +26,8 @@ public class OrderProduct {
     private String status;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "products_orders",
-            joinColumns = {@JoinColumn(name = "order_product_id")},
+    @JoinTable(name = "product_shopping_cart",
+            joinColumns = {@JoinColumn(name = "shopping_id")},
             inverseJoinColumns = {@JoinColumn(name = "product_id")})
-    private List<OrderProductDetail> productDetails;
+    private List<ShoppingCartDetail> productDetails;
 }

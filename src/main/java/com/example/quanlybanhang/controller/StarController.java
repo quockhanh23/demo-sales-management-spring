@@ -19,29 +19,29 @@ public class StarController {
     private final StarService starService;
 
     @GetMapping("/get-star")
-    public ResponseEntity<?> getAllStarByProduct(@RequestParam Long idProduct) {
+    public ResponseEntity<Object> getAllStarByProduct(@RequestParam Long idProduct) {
         List<Star> list = starService.findAllByProductId(idProduct);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping("/get-star-by-user")
-    public ResponseEntity<?> getAllStarByUserAndProduct(@RequestParam Long idUser,
-                                                        @RequestParam Long idProduct) {
+    public ResponseEntity<Object> getAllStarByUserAndProduct(@RequestParam Long idUser,
+                                                             @RequestParam Long idProduct) {
         Star star = starService.findStarByUserAndProduct(idUser, idProduct);
         return new ResponseEntity<>(star, HttpStatus.OK);
     }
 
     @GetMapping("/star-level")
-    public ResponseEntity<?> getAllStarByProductAndLevel(@RequestParam Long idProduct,
-                                                         @RequestParam String type) {
+    public ResponseEntity<Object> getAllStarByProductAndLevel(@RequestParam Long idProduct,
+                                                              @RequestParam String type) {
         List<Star> list = starService.findAllByProductIdAndType(idProduct, type);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/create-star")
-    public ResponseEntity<?> create(@RequestParam Long idProduct,
-                                    @RequestParam Long idUser,
-                                    @RequestParam String type) {
+    public ResponseEntity<Object> create(@RequestParam Long idProduct,
+                                         @RequestParam Long idUser,
+                                         @RequestParam String type) {
         Star star = starService.initStar(idUser, idProduct, type);
         starService.save(star);
         return new ResponseEntity<>(HttpStatus.OK);

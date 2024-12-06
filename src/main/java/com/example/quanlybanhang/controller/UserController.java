@@ -21,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<Object> createUser(@RequestBody User user) {
         try {
             userService.validateUser(user);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/changeStatus")
-    public ResponseEntity<?> changeStatus(@RequestParam Long idUser, @RequestParam String status) {
+    public ResponseEntity<Object> changeStatus(@RequestParam Long idUser, @RequestParam String status) {
         try {
             Optional<User> userOptional = userService.findById(idUser);
             userOptional.ifPresent(user -> user.setStatus(status));
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/getInformation")
-    public ResponseEntity<?> getInformation(@RequestParam Long idUser) {
+    public ResponseEntity<Object> getInformation(@RequestParam Long idUser) {
         try {
             User user = userService.checkExistUser(idUser);
             user.setPassword(null);
@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<Object> login(@RequestBody User user) {
         try {
             userService.checkLogin(user.getUsername(), user.getPassword());
             userService.checkBannerUser(user.getUsername());
@@ -82,7 +82,7 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody UserDTO user) {
+    public ResponseEntity<Object> resetPassword(@RequestBody UserDTO user) {
         try {
             userService.resetPassword(user.getUsername(), user.getPin(),
                     user.getNewPassword(), user.getConfirmPassword());
@@ -97,7 +97,7 @@ public class UserController {
     }
 
     @GetMapping("/findByUserName")
-    public ResponseEntity<?> findByUserName(@RequestParam String username) {
+    public ResponseEntity<Object> findByUserName(@RequestParam String username) {
         Optional<User> userOptional = userService.findUserByUsername(username);
         if (userOptional.isEmpty()) {
             throw new InvalidException(MessageConstants.NOT_FOUND_USER);

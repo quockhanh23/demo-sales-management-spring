@@ -24,7 +24,7 @@ public class UploadFileController {
     private final UploadFileService uploadFileService;
 
     @PostMapping("/uploadInProject")
-    public ResponseEntity<?> uploadInProject(@RequestParam("file") MultipartFile image) {
+    public ResponseEntity<Object> uploadInProject(@RequestParam("file") MultipartFile image) {
         String fileName = image.getOriginalFilename();
         uploadFileService.directoryCreateInProject();
         fileName = uploadFileService.convertFileName(fileName);
@@ -39,7 +39,7 @@ public class UploadFileController {
     }
 
     @PostMapping("/uploadInDriveStorage")
-    public ResponseEntity<?> uploadInDriveStorage(@RequestParam("file") MultipartFile image) {
+    public ResponseEntity<Object> uploadInDriveStorage(@RequestParam("file") MultipartFile image) {
         String fileName = image.getOriginalFilename();
         uploadFileService.directoryCreateInHardDrive();
         fileName = uploadFileService.convertFileName(fileName);
@@ -53,7 +53,7 @@ public class UploadFileController {
     }
 
     @GetMapping("/images/{fileName}")
-    public ResponseEntity<?> getImage(@PathVariable("fileName") String fileName) {
+    public ResponseEntity<Object> getImage(@PathVariable("fileName") String fileName) {
         try {
             File file = new File(UploadFileConstant.SRC_IMAGE_HARD_DRIVE + fileName);
             byte[] imageBytes = Files.readAllBytes(file.toPath());

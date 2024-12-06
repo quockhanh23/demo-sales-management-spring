@@ -1,6 +1,6 @@
 package com.example.quanlybanhang.models;
 
-import com.example.quanlybanhang.common.OrderProductDetailStatus;
+import com.example.quanlybanhang.common.ShoppingCartDetailStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OrderProductDetail {
+public class ShoppingCartDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,5 +27,5 @@ public class OrderProductDetail {
     private Date createdAt;
     private Date updatedAt;
     private String price;
-    private OrderProductDetailStatus status;
+    private ShoppingCartDetailStatus status;
 }

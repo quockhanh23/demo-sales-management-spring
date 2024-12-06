@@ -25,7 +25,7 @@ public class AdminController {
     private final UserRepository userRepository;
 
     @GetMapping("/get-all-user")
-    public ResponseEntity<?> getAllUser(@RequestParam Long idUser) {
+    public ResponseEntity<Object> getAllUser(@RequestParam Long idUser) {
         User admin = userService.checkExistUser(idUser);
         if (!SalesManagementConstants.ROLE_ADMIN.equals(admin.getRole())) {
             throw new InvalidException(MessageConstants.NOT_ADMIN);
@@ -38,9 +38,9 @@ public class AdminController {
     }
 
     @GetMapping("/user-action")
-    public ResponseEntity<?> userAction(@RequestParam Long idAdmin,
-                                        @RequestParam Long idUser,
-                                        @RequestParam String type) {
+    public ResponseEntity<Object> userAction(@RequestParam Long idAdmin,
+                                             @RequestParam Long idUser,
+                                             @RequestParam String type) {
         if (SalesManagementConstants.STATUS_ACTIVE.equalsIgnoreCase(type)) {
             userService.unbanUser(idAdmin, idUser);
         }
