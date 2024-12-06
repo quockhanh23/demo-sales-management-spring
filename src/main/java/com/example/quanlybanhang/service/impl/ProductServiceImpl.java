@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
             throw new InvalidException(MessageConstants.PRODUCT_DESCRIPTION_MAX_SIZE);
         }
         product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
+        product.setCreatedAt(new Date());
     }
 
     public Product checkExistProduct(Long idProduct) {

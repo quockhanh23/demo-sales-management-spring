@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
             throw new InvalidException("không có id người dùng hoặc id sản phẩm");
         }
         if (StringUtils.isEmpty(commentDTO.getContent())) {
-            throw new InvalidException("Không có nội dung");
+            throw new InvalidException("Không có nội dung bình luận");
         }
     }
 }

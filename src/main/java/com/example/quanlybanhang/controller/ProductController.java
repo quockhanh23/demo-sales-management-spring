@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/products")
@@ -70,6 +72,7 @@ public class ProductController {
             productUpdate.setProductName(product.getProductName());
             productUpdate.setQuantity(product.getQuantity());
             productUpdate.setPrice(product.getPrice());
+            productUpdate.setUpdatedAt(new Date());
             productService.save(productUpdate);
             return new ResponseEntity<>(productUpdate, HttpStatus.OK);
         } catch (InvalidException e) {
@@ -99,9 +102,8 @@ public class ProductController {
     }
 
     @GetMapping("/getAllProduct")
-    public ResponseEntity<Object> getAllProductPage
-            (@RequestParam(defaultValue = "0", required = false) int page,
-             @RequestParam(defaultValue = "10", required = false) int size) {
+    public ResponseEntity<Object> getAllProductPage(@RequestParam(defaultValue = "0", required = false) int page,
+                                                    @RequestParam(defaultValue = "10", required = false) int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
             Page<ProductDTO> productDTOPage = productService.getAllProductPage(pageable);
@@ -114,8 +116,8 @@ public class ProductController {
 
     @GetMapping("/detailProduct")
     public ResponseEntity<Object> getDetailProduct(@RequestParam Long idProduct) {
-        ProductDTO productDTO = new ProductDTO();
         try {
+            ProductDTO productDTO = new ProductDTO();
             Product product = productService.checkExistProduct(idProduct);
             BeanUtils.copyProperties(product, productDTO);
             productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
