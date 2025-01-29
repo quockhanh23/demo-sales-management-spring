@@ -14,7 +14,11 @@ import java.util.Optional;
 public class QuanlybanhangApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(QuanlybanhangApplication.class, args);
+        try {
+            SpringApplication.run(QuanlybanhangApplication.class, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Bean
