@@ -1,7 +1,7 @@
 package com.example.quanlybanhang.controller;
 
-import com.example.quanlybanhang.dto.ShoppingCartDTO;
 import com.example.quanlybanhang.dto.ProductDTO;
+import com.example.quanlybanhang.dto.ShoppingCartDTO;
 import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
@@ -93,9 +93,9 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/change-status")
-    public ResponseEntity<Object> changeStatus(@RequestParam String status,
-                                               @RequestParam Long idOrderProduct,
-                                               @RequestParam Long idUser) {
+    public ResponseEntity<Object> changeStatus(@RequestParam Long idOrderProduct,
+                                               @RequestParam Long idUser,
+                                               @RequestParam String status) {
         try {
             shoppingCartService.changeStatus(idOrderProduct, idUser, status);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -113,6 +113,20 @@ public class ShoppingCartController {
         try {
             long count = shoppingCartService.countAllByUser(idUser);
             return new ResponseEntity<>(count, HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/get-all-complete")
+    public ResponseEntity<Object> getAllComplete(@RequestParam Long idUser) {
+        try {
+            shoppingCartService.getAllComplete(idUser);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -4,21 +4,22 @@ import com.example.quanlybanhang.common.CommonUtils;
 import com.example.quanlybanhang.common.ShoppingCartDetailStatus;
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
+import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.dto.ShoppingCartDTO;
 import com.example.quanlybanhang.dto.ShoppingCartDetailDTO;
-import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.exeption.InvalidException;
+import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.models.ShoppingCart;
 import com.example.quanlybanhang.models.ShoppingCartDetail;
-import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.repository.ShoppingCartDetailRepository;
 import com.example.quanlybanhang.repository.ShoppingCartRepository;
-import com.example.quanlybanhang.service.ShoppingCartService;
 import com.example.quanlybanhang.service.ProductService;
+import com.example.quanlybanhang.service.ShoppingCartService;
 import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -52,7 +53,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public long countAllByUser(Long idUser) {
         User user = userService.checkExistUser(idUser);
-        List<ShoppingCart> shoppingCartList = shoppingCartRepository.getAllByUser(user);
+        List<ShoppingCart> shoppingCartList = shoppingCartRepository
+                .getAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
         if (CollectionUtils.isEmpty(shoppingCartList)) return 0;
         ShoppingCart shoppingCart = shoppingCartList.get(0);
         List<ShoppingCartDetail> list = shoppingCartDetailRepository.findAllByIdOrderProduct(shoppingCart.getId());
@@ -101,7 +103,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void removeToCart(Long idUser, Long idProduct) {
         User user = userService.checkExistUser(idUser);
-        List<ShoppingCart> shoppingCartList = shoppingCartRepository.getAllByUser(user);
+        List<ShoppingCart> shoppingCartList = shoppingCartRepository
+                .getAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
         if (CollectionUtils.isEmpty(shoppingCartList)) return;
         ShoppingCart shoppingCart = shoppingCartList.get(0);
         List<ShoppingCartDetail> productDetails = shoppingCart.getProductDetails();
@@ -158,7 +161,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private ShoppingCart checkOrderProduct(Long idUser) {
         User user = userService.checkExistUser(idUser);
-        List<ShoppingCart> shoppingCartList = shoppingCartRepository.getAllByUser(user);
+        List<ShoppingCart> shoppingCartList = shoppingCartRepository
+                .getAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
         if (CollectionUtils.isEmpty(shoppingCartList)) return null;
         return shoppingCartList.get(0);
     }
@@ -167,7 +171,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCartDTO getAllProductInCart(Long idUser) throws IOException {
         User user = userService.checkExistUser(idUser);
         ShoppingCartDTO orderProductDTO = new ShoppingCartDTO();
-        List<ShoppingCart> shoppingCartList = shoppingCartRepository.getAllByUser(user);
+        List<ShoppingCart> shoppingCartList = shoppingCartRepository
+                .getAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
         if (CollectionUtils.isEmpty(shoppingCartList)) return orderProductDTO;
         ShoppingCart shoppingCart = shoppingCartList.get(0);
         List<ShoppingCartDetail> productDetails = shoppingCart.getProductDetails();
@@ -217,6 +222,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.setStatus(status);
         shoppingCart.setUpdatedAt(new Date());
         shoppingCartRepository.save(shoppingCart);
+    }
+
+    @Override
+    public List<ShoppingCartDTO> getAllComplete(Long idUser) {
+        User user = userService.checkExistUser(idUser);
+        List<ShoppingCartDTO> shoppingCartDTOS = new ArrayList<>();
+        List<ShoppingCart> shoppingCartList = shoppingCartRepository
+                .getAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_BOUGHT);
+        if (CollectionUtils.isEmpty(shoppingCartList)) return new ArrayList<>();
+        for (ShoppingCart shoppingCart : shoppingCartList) {
+            List<ShoppingCartDetail> shoppingCartDetails = shoppingCart.getProductDetails()
+                    .stream()
+                    .filter(item -> item.getStatus().equals(ShoppingCartDetailStatus.IN_CART)).toList();
+            shoppingCart.setProductDetails(shoppingCartDetails);
+            ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
+            BeanUtils.copyProperties(shoppingCart, shoppingCartDTO);
+        }
+        return shoppingCartDTOS;
     }
 
     private ShoppingCartDetail initOrderProductDetail(Product product) {
