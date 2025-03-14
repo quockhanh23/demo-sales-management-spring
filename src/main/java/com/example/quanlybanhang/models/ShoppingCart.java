@@ -23,6 +23,7 @@ public class ShoppingCart {
     private User user;
     private Date createdAt;
     private Date updatedAt;
+    @Column(length = 20)
     private String status;
 
     @ManyToMany(cascade = CascadeType.ALL)
