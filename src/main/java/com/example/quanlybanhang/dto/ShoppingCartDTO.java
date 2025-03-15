@@ -16,5 +16,5 @@ public class ShoppingCartDTO {
     private Date createAt;
     private String status;
     private List<ShoppingCartDetailDTO> shoppingCartDetailDTOList;
-    private BigDecimal totalPrice;
+    private String totalPrice;
 }

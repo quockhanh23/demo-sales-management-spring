@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/orders")
@@ -125,8 +127,8 @@ public class ShoppingCartController {
     @GetMapping("/get-all-complete")
     public ResponseEntity<Object> getAllComplete(@RequestParam Long idUser) {
         try {
-            shoppingCartService.getAllComplete(idUser);
-            return new ResponseEntity<>(HttpStatus.OK);
+            List<ShoppingCartDTO> shoppingCartDTOS = shoppingCartService.getAllComplete(idUser);
+            return new ResponseEntity<>(shoppingCartDTOS, HttpStatus.OK);
         } catch (InvalidException e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

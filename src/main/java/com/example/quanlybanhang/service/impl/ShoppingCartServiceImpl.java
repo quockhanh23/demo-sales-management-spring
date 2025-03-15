@@ -12,7 +12,6 @@ import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.models.ShoppingCart;
 import com.example.quanlybanhang.models.ShoppingCartDetail;
 import com.example.quanlybanhang.models.User;
-import com.example.quanlybanhang.repository.ShoppingCartDetailRepository;
 import com.example.quanlybanhang.repository.ShoppingCartRepository;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.ShoppingCartService;
@@ -34,7 +33,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final UserService userService;
     private final ProductService productService;
     private final ShoppingCartRepository shoppingCartRepository;
-    private final ShoppingCartDetailRepository shoppingCartDetailRepository;
 
     @Override
     public Optional<ShoppingCart> findById(Long id) {
@@ -57,8 +55,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .getAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
         if (CollectionUtils.isEmpty(shoppingCartList)) return 0;
         ShoppingCart shoppingCart = shoppingCartList.get(0);
-        List<ShoppingCartDetail> list = shoppingCartDetailRepository.findAllByIdOrderProduct(shoppingCart.getId());
-        List<Long> productDetailList = list.stream()
+        List<Long> productDetailList = shoppingCart.getProductDetails().stream()
                 .filter(item -> ShoppingCartDetailStatus.IN_CART.equals(item.getStatus()))
                 .map(ShoppingCartDetail::getIdProduct).distinct().toList();
         return productDetailList.size();
@@ -71,27 +68,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (product.isEmpty()) throw new InvalidException(MessageConstants.NOT_FOUND_PRODUCT);
         Optional<ShoppingCart> optionalOrderProduct = shoppingCartRepository
                 .findAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
-        ShoppingCart shoppingCart;
-        ShoppingCartDetail shoppingCartDetail = initOrderProductDetail(product.get());
-        shoppingCartDetail.setQuantity(productDTO.getQuantity());
-        shoppingCartDetail.setStatus(ShoppingCartDetailStatus.IN_CART);
         if (optionalOrderProduct.isEmpty()) {
-            shoppingCart = new ShoppingCart();
+            ShoppingCartDetail shoppingCartDetail = initOrderProductDetail(product.get());
+            shoppingCartDetail.setStatus(ShoppingCartDetailStatus.IN_CART);
+            ShoppingCart shoppingCart = new ShoppingCart();
             shoppingCart.setCreatedAt(new Date());
             shoppingCart.setUser(user);
             shoppingCart.setStatus(SalesManagementConstants.STATUS_ORDER_PENDING);
-            shoppingCartRepository.save(shoppingCart);
-
             shoppingCartDetail.setPrice(product.get().getPrice());
-
-            Optional<ShoppingCart> orderProductOptional = shoppingCartRepository
-                    .findAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_PENDING);
-            if (orderProductOptional.isPresent()) {
-                shoppingCartDetail.setIdOrderProduct(orderProductOptional.get().getId());
-                orderProductOptional.get().setProductDetails(Collections.singletonList(shoppingCartDetail));
-            }
+            shoppingCart.setProductDetails(Collections.singletonList(shoppingCartDetail));
+            shoppingCartRepository.saveAndFlush(shoppingCart);
         } else {
-            shoppingCart = optionalOrderProduct.get();
+            ShoppingCartDetail shoppingCartDetail = initOrderProductDetail(product.get());
+            shoppingCartDetail.setStatus(ShoppingCartDetailStatus.IN_CART);
+            ShoppingCart shoppingCart = optionalOrderProduct.get();
             List<ShoppingCartDetail> list = shoppingCart.getProductDetails();
             shoppingCartDetail.setIdOrderProduct(shoppingCart.getId());
             shoppingCartDetail.setPrice(product.get().getPrice());
@@ -151,7 +141,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Optional<Product> product = productService.findById(idProduct);
         if (product.isEmpty()) throw new InvalidException(MessageConstants.NOT_FOUND_PRODUCT);
         ShoppingCartDetail shoppingCartDetail = initOrderProductDetail(product.get());
-        shoppingCartDetail.setQuantity(product.get().getQuantity());
+        shoppingCartDetail.setQuantity(1);
         shoppingCartDetail.setStatus(ShoppingCartDetailStatus.IN_CART);
         shoppingCartDetail.setIdOrderProduct(shoppingCart.getId());
         shoppingCartDetail.setPrice(product.get().getPrice());
@@ -183,6 +173,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .map(ShoppingCartDetail::getIdProduct).distinct().toList();
         if (CollectionUtils.isEmpty(productDetails)) return orderProductDTO;
         Set<Product> productSet = productService.findAllByIdProductIn(idProductList);
+        BigDecimal totalValue = BigDecimal.ZERO;
         for (Long aLong : idProductList) {
             ShoppingCartDetailDTO shoppingCartDetailDTO = new ShoppingCartDetailDTO();
             Product product = productSet.stream().filter(item -> aLong.equals(item.getIdProduct()))
@@ -201,9 +192,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 BigDecimal price = new BigDecimal(product.getPrice());
                 BigDecimal total = price.multiply(BigDecimal.valueOf(totalQuantity.size()));
                 shoppingCartDetailDTO.setTotalPrice(String.valueOf(total));
+                totalValue = totalValue.add(total);
             }
             productDetailDTOList.add(shoppingCartDetailDTO);
         }
+        orderProductDTO.setTotalPrice(String.valueOf(totalValue));
         orderProductDTO.setIdOrderProduct(shoppingCart.getId());
         orderProductDTO.setStatus(shoppingCart.getStatus());
         orderProductDTO.setShoppingCartDetailDTOList(productDetailDTOList);
@@ -222,6 +215,37 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.setStatus(status);
         shoppingCart.setUpdatedAt(new Date());
         shoppingCartRepository.save(shoppingCart);
+
+        List<ShoppingCartDetail> productDetails = shoppingCart.getProductDetails();
+        List<ShoppingCartDetail> productInCart = productDetails.stream()
+                .filter(item -> ShoppingCartDetailStatus.IN_CART.equals(item.getStatus())).toList();
+        List<Long> productIdList = productDetails.stream()
+                .filter(item -> ShoppingCartDetailStatus.IN_CART.equals(item.getStatus()))
+                .map(ShoppingCartDetail::getIdProduct).distinct().toList();
+        Map<Long, Integer> productIdAndQuantity = new HashMap<>();
+        for (ShoppingCartDetail shoppingCartDetail : productInCart) {
+            if (productIdAndQuantity.containsKey(shoppingCartDetail.getIdProduct())) {
+                // Nếu có, cộng dồn giá trị
+                productIdAndQuantity.put(shoppingCartDetail.getIdProduct(), productIdAndQuantity.get(shoppingCartDetail.getIdProduct()) + shoppingCartDetail.getQuantity());
+            } else {
+                // Nếu chưa, thêm mới
+                productIdAndQuantity.put(shoppingCartDetail.getIdProduct(), shoppingCartDetail.getQuantity());
+            }
+        }
+        Set<Product> productSet = productService.findAllByIdProductIn(productIdList);
+        for (Product product : productSet) {
+            Long productId = product.getIdProduct();
+            Optional<Integer> optionalValue = productIdAndQuantity.entrySet()
+                    .stream()
+                    .filter(item -> item.getKey().equals(productId))
+                    .map(Map.Entry::getValue)
+                    .findFirst();
+            if (optionalValue.isPresent()) {
+                int value = optionalValue.get();
+                product.setQuantity(product.getQuantity() - value);
+            }
+        }
+        productService.saveAll(productSet);
     }
 
     @Override
@@ -238,6 +262,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCart.setProductDetails(shoppingCartDetails);
             ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
             BeanUtils.copyProperties(shoppingCart, shoppingCartDTO);
+            shoppingCartDTOS.add(shoppingCartDTO);
         }
         return shoppingCartDTOS;
     }
