@@ -13,22 +13,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Product {
+public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idProduct;
-    @Column(length = 200)
-    private String productName;
-    private Long idCategory;
-    private String price;
-    private int quantity;
-    @Column(length = 20)
-    private String status;
-    private boolean isDelete;
-    @Lob
-    private String image;
-    @Column(length = 500)
-    private String description;
+    private Long id;
+    @Column(length = 100)
+    private String content;
     private Date createdAt;
     private Date updatedAt;
 }
