@@ -1,12 +1,19 @@
 package com.example.quanlybanhang.service;
 
+import com.example.quanlybanhang.common.OrderPaymentStatus;
 import com.example.quanlybanhang.models.OrderPayment;
+
+import java.util.List;
 
 public interface OrderPaymentService {
 
-    void createOrderPayment(OrderPayment orderPayment);
+    OrderPayment createOrderPayment(OrderPayment orderPayment);
 
-    void updateStatusOrderPayment(String status);
+    OrderPayment updateStatusOrderPayment(Long idOrderPayment, String status);
 
-    OrderPayment findById(Long idOrderPayment);
+    OrderPayment getDetailOrderPayment(Long idOrderPayment);
+
+    List<OrderPayment> getAllOrderPaymentByIdUserAndOrderPaymentStatus
+            (Long idUser, OrderPaymentStatus orderPaymentStatus);
+
 }

@@ -23,12 +23,16 @@ public class User {
     private String password;
     @Column(length = 40)
     private String confirmPassword;
+    @Column(length = 100)
+    private String fullName;
     private Date dateOfBirth;
     @Column(length = 20)
     private String phone;
     @Column(length = 20)
     private String pin;
+    @Column(length = 20)
     private String status;
+    @Column(length = 20)
     private String role;
     private boolean isBuyer;
     @Lob

@@ -13,13 +13,14 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Star {
+public class OrderPaymentHistory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 5)
-    private String numberOfStars;
-    private Long productId;
-    private Long idUser;
+    private Long idOrderPayment;
+    @Column(length = 20)
+    private String status;
     private Date createdAt;
+    private Date updatedAt;
 }
