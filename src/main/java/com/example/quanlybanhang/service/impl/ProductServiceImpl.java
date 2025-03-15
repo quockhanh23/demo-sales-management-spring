@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
         if (StringUtils.isEmpty(product.getImage())) {
             product.setImage(UploadFileConstant.SRC_IMAGE_PROJECT + SalesManagementConstants.DEFAULT_NO_IMAGE);
         }
-        if (product.getDescription().length() > 50) {
+        if (product.getDescription().length() > 500) {
             throw new InvalidException(MessageConstants.PRODUCT_DESCRIPTION_MAX_SIZE);
         }
         product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
