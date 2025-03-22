@@ -123,18 +123,4 @@ public class ShoppingCartController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/get-all-complete")
-    public ResponseEntity<Object> getAllComplete(@RequestParam Long idUser) {
-        try {
-            List<ShoppingCartDTO> shoppingCartDTOS = shoppingCartService.getAllComplete(idUser);
-            return new ResponseEntity<>(shoppingCartDTOS, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }

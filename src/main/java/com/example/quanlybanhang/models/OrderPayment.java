@@ -20,15 +20,14 @@ public class OrderPayment {
     private Long id;
     private Long idUser;
     private Long idShoppingCart;
-    private String address;
-    private String province;
-    private String district;
-    private String ward;
-    private String street;
+    private Long idAddress;
     @Column(length = 500)
     private String note;
-    private String deliveryTime;
+    private String totalOrderAmount;
+    private String deliveryMethod;
+    private String estimatedDelivery;
     private Date createdAt;
     private Date updatedAt;
     private OrderPaymentStatus orderPaymentStatus;
+
 }

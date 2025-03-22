@@ -53,6 +53,7 @@ public class AddressServiceImpl implements AddressService {
     public void deleteAddress(Long idAddress) {
         Address address = getDetailAddress(idAddress);
         address.setStatus(AddressStatus.INACTIVE);
+        address.setUpdatedAt(new Date());
         addressRepository.save(address);
     }
 

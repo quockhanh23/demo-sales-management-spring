@@ -43,7 +43,6 @@ public class AddressController {
         return new ResponseEntity<>(address, HttpStatus.OK);
     }
 
-
     @PostMapping("/create-address")
     public ResponseEntity<Object> createAddress(@RequestParam Long idUser,
                                                 @RequestBody Address address) {
@@ -56,6 +55,13 @@ public class AddressController {
     public ResponseEntity<Object> selectAddress(@RequestParam Long idUser, @RequestParam Long idAddress) {
         userService.checkExistUser(idUser);
         addressService.selectAddress(idUser, idAddress);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-address")
+    public ResponseEntity<Object> deleteAddress(@RequestParam Long idUser, @RequestParam Long idAddress) {
+        userService.checkExistUser(idUser);
+        addressService.deleteAddress(idAddress);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

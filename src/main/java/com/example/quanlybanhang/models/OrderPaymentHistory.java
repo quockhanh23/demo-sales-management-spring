@@ -1,5 +1,6 @@
 package com.example.quanlybanhang.models;
 
+import com.example.quanlybanhang.common.OrderPaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +21,6 @@ public class OrderPaymentHistory {
     private Long id;
     private Long idOrderPayment;
     @Column(length = 20)
-    private String status;
+    private OrderPaymentStatus status;
     private Date createdAt;
-    private Date updatedAt;
 }

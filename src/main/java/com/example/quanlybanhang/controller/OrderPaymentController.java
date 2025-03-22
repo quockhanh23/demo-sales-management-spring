@@ -62,4 +62,18 @@ public class OrderPaymentController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/get-all-order-payment")
+    public ResponseEntity<Object> getAllOrderPayment(@RequestParam Long idUser, @RequestParam String status) {
+        try {
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (InvalidException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

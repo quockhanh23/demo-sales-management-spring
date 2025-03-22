@@ -17,8 +17,22 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
 
     private final OrderPaymentRepository orderPaymentRepository;
 
+    private void validateOrderPayment(OrderPayment orderPayment) {
+        if (orderPayment.getIdAddress() == null) {
+            throw new InvalidException("Không tìm thấy địa chỉ nhận hàng");
+        }
+        if (orderPayment.getIdShoppingCart() == null) {
+            throw new InvalidException("Không tìm thấy đơn hàng");
+        }
+        if (orderPayment.getDeliveryTime() == null) {
+            throw new InvalidException("Không tìm thấy ngày giờ giao hàng");
+        }
+    }
+
     @Override
     public OrderPayment createOrderPayment(OrderPayment orderPayment) {
+        validateOrderPayment(orderPayment);
+        orderPayment.setOrderPaymentStatus(OrderPaymentStatus.ORDER_SUCCESSFUL);
         return orderPaymentRepository.save(orderPayment);
     }
 
