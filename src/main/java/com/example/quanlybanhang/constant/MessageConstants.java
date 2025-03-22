@@ -1,5 +1,8 @@
 package com.example.quanlybanhang.constant;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class MessageConstants {
     public static final String NOT_ADMIN = "Bạn không phải Admin";
     public static final String NOT_FOUND_USER = "Không tìm thấy người dùng";

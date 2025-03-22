@@ -1,6 +1,5 @@
 package com.example.quanlybanhang.controller;
 
-import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.Category;
 import com.example.quanlybanhang.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,34 +30,18 @@ public class CategoryController {
 
     @PostMapping("/create-category")
     public ResponseEntity<Object> createCategory(@RequestBody Category category) {
-        try {
-            categoryRepository.save(category);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        categoryRepository.save(category);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/update-category")
     public ResponseEntity<Object> updateCategory(@RequestParam Long idCategory, @RequestBody Category category) {
-        try {
-            Optional<Category> categoryOptional = categoryRepository.findById(idCategory);
-            if (categoryOptional.isPresent()) {
-                categoryOptional.get().setContent(category.getContent());
-                categoryOptional.get().setUpdatedAt(new Date());
-                categoryRepository.save(categoryOptional.get());
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            }
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        Optional<Category> categoryOptional = categoryRepository.findById(idCategory);
+        if (categoryOptional.isPresent()) {
+            categoryOptional.get().setContent(category.getContent());
+            categoryOptional.get().setUpdatedAt(new Date());
+            categoryRepository.save(categoryOptional.get());
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

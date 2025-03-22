@@ -15,6 +15,7 @@ public class ControllerExceptionHandler {
         message.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         message.setMessage(exception.getMessage());
         message.setDescription(request.getDescription(false));
+        exception.printStackTrace();
         return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -24,6 +25,7 @@ public class ControllerExceptionHandler {
         message.setStatusCode(HttpStatus.BAD_REQUEST.value());
         message.setMessage(exception.getMessage());
         message.setDescription(request.getDescription(false));
+        exception.printStackTrace();
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }

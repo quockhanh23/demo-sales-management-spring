@@ -22,78 +22,39 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
-        try {
-            userService.validateUser(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        userService.validateUser(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @GetMapping("/changeStatus")
     public ResponseEntity<Object> changeStatus(@RequestParam Long idUser, @RequestParam String status) {
-        try {
-            Optional<User> userOptional = userService.findById(idUser);
-            userOptional.ifPresent(user -> user.setStatus(status));
-            return new ResponseEntity<>(userOptional, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Optional<User> userOptional = userService.findById(idUser);
+        userOptional.ifPresent(user -> user.setStatus(status));
+        return new ResponseEntity<>(userOptional, HttpStatus.OK);
     }
 
     @GetMapping("/getInformation")
     public ResponseEntity<Object> getInformation(@RequestParam Long idUser) {
-        try {
-            User user = userService.checkExistUser(idUser);
-            user.setPassword(null);
-            user.setConfirmPassword(null);
-            user.setPin(null);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        User user = userService.checkExistUser(idUser);
+        user.setPassword(null);
+        user.setConfirmPassword(null);
+        user.setPin(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody User user) {
-        try {
-            userService.checkLogin(user.getUsername(), user.getPassword());
-            userService.checkBannerUser(user.getUsername());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        userService.checkLogin(user.getUsername(), user.getPassword());
+        userService.checkBannerUser(user.getUsername());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<Object> resetPassword(@RequestBody ResetPassword user) {
-        try {
-            userService.resetPassword(user.getUsername(), user.getPin(),
-                    user.getNewPassword(), user.getConfirmPassword());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        userService.resetPassword(user.getUsername(), user.getPin(),
+                user.getNewPassword(), user.getConfirmPassword());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/findByUserName")

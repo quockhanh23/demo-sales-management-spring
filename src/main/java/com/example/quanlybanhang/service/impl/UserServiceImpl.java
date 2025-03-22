@@ -88,18 +88,14 @@ public class UserServiceImpl implements UserService {
         if (user.getPassword().length() > 32 || user.getPassword().length() < 6) {
             throw new InvalidException("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
         }
-        if (user.getPhone().length() != 11) {
+        if (user.getPhone().length() != 10) {
             throw new InvalidException("Số điện thoại chỉ có 10 số thôi");
         }
         if (user.getPin().length() != 8) {
             throw new InvalidException("Số pin chỉ có 8 số");
         }
         user.setStatus(SalesManagementConstants.STATUS_ACTIVE);
-        if (null == user.getRole() && user.isBuyer()) {
-            user.setRole(SalesManagementConstants.ROLE_BUYER);
-        } else {
-            user.setRole(SalesManagementConstants.ROLE_SELLER);
-        }
+        user.setRole(SalesManagementConstants.ROLE_BUYER);
         if (user.getRole().equals(SalesManagementConstants.ROLE_ADMIN)) {
             user.setRole(SalesManagementConstants.ROLE_ADMIN);
         }

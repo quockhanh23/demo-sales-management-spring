@@ -1,8 +1,10 @@
 package com.example.quanlybanhang.constant;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class SalesManagementConstants {
     public static final String ROLE_BUYER = "ROLE_BUYER";
-    public static final String ROLE_SELLER = "ROLE_SELLER";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
     public static final String STATUS_ACTIVE = "ACTIVE";
     public static final String STATUS_INACTIVE = "INACTIVE";

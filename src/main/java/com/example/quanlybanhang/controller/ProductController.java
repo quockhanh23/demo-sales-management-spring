@@ -28,77 +28,47 @@ public class ProductController {
 
     @PostMapping("/create-product")
     public ResponseEntity<Object> createProduct(@RequestBody Product product, @RequestParam Long idUser) {
-        try {
-            userService.checkRoleAdmin(idUser);
-            productService.validateProduct(product);
-            productService.save(product);
-            return new ResponseEntity<>(product, HttpStatus.CREATED);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        userService.checkRoleAdmin(idUser);
+        productService.validateProduct(product);
+        productService.save(product);
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/update-status-product")
     public ResponseEntity<Object> updateStatusProduct(@RequestParam String status,
                                                       @RequestParam Long idProduct,
                                                       @RequestParam Long idUser) {
-        try {
-            userService.checkRoleAdmin(idUser);
-            Product product = productService.checkExistProduct(idProduct);
-            product.setStatus(status);
-            productService.save(product);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        userService.checkRoleAdmin(idUser);
+        Product product = productService.checkExistProduct(idProduct);
+        product.setStatus(status);
+        productService.save(product);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PutMapping("/update-product")
     public ResponseEntity<Object> updateInformationProduct(@RequestBody Product product,
                                                            @RequestParam Long idProduct,
                                                            @RequestParam Long idUser) {
-        try {
-            userService.checkRoleAdmin(idUser);
-            Product productUpdate = productService.checkExistProduct(idProduct);
-            productUpdate.setStatus(product.getStatus());
-            productUpdate.setProductName(product.getProductName());
-            productUpdate.setQuantity(product.getQuantity());
-            productUpdate.setPrice(product.getPrice());
-            productUpdate.setUpdatedAt(new Date());
-            productService.save(productUpdate);
-            return new ResponseEntity<>(productUpdate, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        userService.checkRoleAdmin(idUser);
+        Product productUpdate = productService.checkExistProduct(idProduct);
+        productUpdate.setStatus(product.getStatus());
+        productUpdate.setProductName(product.getProductName());
+        productUpdate.setQuantity(product.getQuantity());
+        productUpdate.setPrice(product.getPrice());
+        productUpdate.setUpdatedAt(new Date());
+        productService.save(productUpdate);
+        return new ResponseEntity<>(productUpdate, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-product")
     public ResponseEntity<Object> deleteProduct(@RequestParam Long idProduct, @RequestParam Long idUser) {
-        try {
-            userService.checkRoleAdmin(idUser);
-            Product product = productService.checkExistProduct(idProduct);
-            product.setDelete(true);
-            productService.save(product);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        userService.checkRoleAdmin(idUser);
+        Product product = productService.checkExistProduct(idProduct);
+        product.setDelete(true);
+        productService.save(product);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/getAllProduct")
@@ -123,9 +93,6 @@ public class ProductController {
             BeanUtils.copyProperties(product, productDTO);
             productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
             return new ResponseEntity<>(productDTO, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

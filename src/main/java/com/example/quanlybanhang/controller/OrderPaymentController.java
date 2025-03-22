@@ -1,9 +1,11 @@
 package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.common.OrderPaymentStatus;
-import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.OrderPayment;
+import com.example.quanlybanhang.models.OrderPaymentHistory;
+import com.example.quanlybanhang.repository.OrderPaymentHistoryRepository;
 import com.example.quanlybanhang.service.OrderPaymentService;
+import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,63 +19,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderPaymentController {
 
+    private final UserService userService;
     private final OrderPaymentService orderPaymentService;
+    private final OrderPaymentHistoryRepository orderPaymentHistoryRepository;
 
-    @GetMapping("/get-all-payment")
-    public ResponseEntity<Object> getAllPaymentComplete(@RequestParam Long idUser,
-                                                        @RequestParam OrderPaymentStatus orderPaymentStatus) {
-        try {
-            List<OrderPayment> orderPaymentList = orderPaymentService
-                    .getAllOrderPaymentByIdUserAndOrderPaymentStatus(idUser, orderPaymentStatus);
-            return new ResponseEntity<>(orderPaymentList, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
     @PostMapping("/create-payment")
     public ResponseEntity<Object> createPayment(@RequestBody OrderPayment orderPayment) {
-        try {
-            OrderPayment orderPaymentResponse = orderPaymentService.createOrderPayment(orderPayment);
-            return new ResponseEntity<>(orderPaymentResponse, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        OrderPayment orderPaymentResponse = orderPaymentService.createOrderPayment(orderPayment);
+        return new ResponseEntity<>(orderPaymentResponse, HttpStatus.OK);
     }
 
     @PostMapping("/update-status-payment")
     public ResponseEntity<Object> updateStatusPayment(@RequestParam Long idOrderPayment, @RequestParam String status) {
-        try {
-            OrderPayment orderPaymentResponse = orderPaymentService.updateStatusOrderPayment(idOrderPayment, status);
-            return new ResponseEntity<>(orderPaymentResponse, HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        OrderPayment orderPaymentResponse = orderPaymentService.updateStatusOrderPayment(idOrderPayment, status);
+        return new ResponseEntity<>(orderPaymentResponse, HttpStatus.OK);
     }
 
     @GetMapping("/get-all-order-payment")
-    public ResponseEntity<Object> getAllOrderPayment(@RequestParam Long idUser, @RequestParam String status) {
-        try {
+    public ResponseEntity<Object> getAllOrderPaymentByIdUserAndOrderPaymentStatus
+            (@RequestParam Long idUser,
+             @RequestParam OrderPaymentStatus orderPaymentStatus) {
+        List<OrderPayment> orderPaymentList = orderPaymentService
+                .getAllOrderPaymentByIdUserAndOrderPaymentStatus(idUser, orderPaymentStatus);
+        return new ResponseEntity<>(orderPaymentList, HttpStatus.OK);
+    }
 
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (InvalidException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping("/get-detail-order-payment")
+    public ResponseEntity<Object> getDetailOrderPayment(@RequestParam Long idUser, @RequestParam Long idOrderPayment) {
+        userService.checkExistUser(idUser);
+        OrderPayment orderPayment = orderPaymentService.getDetailOrderPayment(idOrderPayment);
+        return new ResponseEntity<>(orderPayment, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-history-order-payment")
+    public ResponseEntity<Object> getAllHistoryOfOrderPayment
+            (@RequestParam Long idUser, @RequestParam Long idOrderPayment) {
+        userService.checkExistUser(idUser);
+        List<OrderPaymentHistory> orderPaymentHistories = orderPaymentHistoryRepository
+                .getAllByIdOrderPayment(idOrderPayment);
+        return new ResponseEntity<>(orderPaymentHistories, HttpStatus.OK);
     }
 }

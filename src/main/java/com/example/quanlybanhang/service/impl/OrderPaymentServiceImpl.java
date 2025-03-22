@@ -24,7 +24,7 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
         if (orderPayment.getIdShoppingCart() == null) {
             throw new InvalidException("Không tìm thấy đơn hàng");
         }
-        if (orderPayment.getDeliveryTime() == null) {
+        if (orderPayment.getEstimatedDelivery() == null) {
             throw new InvalidException("Không tìm thấy ngày giờ giao hàng");
         }
     }
