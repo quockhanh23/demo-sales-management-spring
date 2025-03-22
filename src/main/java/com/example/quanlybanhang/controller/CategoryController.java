@@ -34,6 +34,12 @@ public class CategoryController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/delete-category")
+    public ResponseEntity<Object> deleteCategory(@RequestParam Long idCategory) {
+        categoryRepository.deleteById(idCategory);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping("/update-category")
     public ResponseEntity<Object> updateCategory(@RequestParam Long idCategory, @RequestBody Category category) {
         Optional<Category> categoryOptional = categoryRepository.findById(idCategory);
@@ -41,7 +47,7 @@ public class CategoryController {
             categoryOptional.get().setContent(category.getContent());
             categoryOptional.get().setUpdatedAt(new Date());
             categoryRepository.save(categoryOptional.get());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
