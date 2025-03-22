@@ -23,7 +23,6 @@ public class OrderPaymentController {
     private final OrderPaymentService orderPaymentService;
     private final OrderPaymentHistoryRepository orderPaymentHistoryRepository;
 
-
     @PostMapping("/create-payment")
     public ResponseEntity<Object> createPayment(@RequestBody OrderPayment orderPayment) {
         OrderPayment orderPaymentResponse = orderPaymentService.createOrderPayment(orderPayment);
