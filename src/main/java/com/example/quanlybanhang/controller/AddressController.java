@@ -42,6 +42,12 @@ public class AddressController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/select-address")
+    public ResponseEntity<Object> selectAddress(@RequestParam Long idUser, @RequestParam Long idAddress) {
+        userService.checkExistUser(idUser);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/getAllProvince")
     public ResponseEntity<?> getAllProvince() throws JsonProcessingException {
         String url = "https://open.oapi.vn/location/provinces?page=0&size=1000";

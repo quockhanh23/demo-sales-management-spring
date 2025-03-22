@@ -1,9 +1,7 @@
 package com.example.quanlybanhang.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.quanlybanhang.common.AddressStatus;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +20,13 @@ public class Address {
     private Long id;
     private Date createdAt;
     private Date updatedAt;
+    @Column(length = 300)
     private String address;
     private String province;
     private String district;
     private String ward;
     private Long idUser;
+    private Boolean inUse;
+    @Column(length = 10)
+    private AddressStatus status;
 }
