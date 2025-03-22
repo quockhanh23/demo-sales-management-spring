@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,12 +28,14 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void selectAddress(Long idUser, Long idAddress) {
-        Address address = getDetailAddress(idAddress);
-        address.setInUse(true);
         List<Address> addressList = getAllByIdUser(idUser);
         if (!CollectionUtils.isEmpty(addressList)) {
             addressList.forEach(address1 -> address1.setInUse(false));
         }
+        Address address = getDetailAddress(idAddress);
+        address.setInUse(true);
+        address.setUpdatedAt(new Date());
+        addressList.add(address);
         addressRepository.saveAll(addressList);
     }
 
@@ -55,7 +58,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<Address> getAllByIdUser(Long idUser) {
-        List<Address> addressList = addressRepository.getAllByIdUser(idUser, AddressStatus.ACTIVE);
+        List<Address> addressList = addressRepository.getAllByIdUserAndStatus(idUser, AddressStatus.ACTIVE);
         if (CollectionUtils.isEmpty(addressList)) addressList = new ArrayList<>();
         return addressList;
     }

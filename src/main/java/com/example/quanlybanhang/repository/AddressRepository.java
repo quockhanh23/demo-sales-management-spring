@@ -13,5 +13,5 @@ import java.util.List;
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
     @Query("SELECT a FROM Address a WHERE a.idUser = :idUser AND a.status = :status")
-    List<Address> getAllByIdUser(@Param("idUser") Long idUser, @Param("status") AddressStatus status);
+    List<Address> getAllByIdUserAndStatus(@Param("idUser") Long idUser, @Param("status") AddressStatus status);
 }

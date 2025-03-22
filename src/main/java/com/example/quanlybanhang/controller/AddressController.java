@@ -34,6 +34,16 @@ public class AddressController {
         return new ResponseEntity<>(addressList, HttpStatus.OK);
     }
 
+    @GetMapping("/get-address-in-use")
+    public ResponseEntity<Object> getAddressInUse(@RequestParam Long idUser) {
+        userService.checkExistUser(idUser);
+        List<Address> addressList = addressService.getAllByIdUser(idUser);
+        Address address = addressList.stream()
+                .filter(i -> Boolean.TRUE.equals(i.getInUse())).findFirst().orElse(addressList.get(0));
+        return new ResponseEntity<>(address, HttpStatus.OK);
+    }
+
+
     @PostMapping("/create-address")
     public ResponseEntity<Object> createAddress(@RequestParam Long idUser,
                                                 @RequestBody Address address) {
@@ -45,6 +55,7 @@ public class AddressController {
     @PutMapping("/select-address")
     public ResponseEntity<Object> selectAddress(@RequestParam Long idUser, @RequestParam Long idAddress) {
         userService.checkExistUser(idUser);
+        addressService.selectAddress(idUser, idAddress);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
