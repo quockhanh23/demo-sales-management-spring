@@ -26,5 +26,5 @@ public interface ProductService {
 
     Product checkExistProduct(Long idProduct);
 
-    Page<ProductDTO> getAllProductPage(Pageable pageable) throws IOException;
+    Page<ProductDTO> getAllProductPage(String productName, Pageable pageable) throws IOException;
 }

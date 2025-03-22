@@ -102,11 +102,12 @@ public class ProductController {
     }
 
     @GetMapping("/getAllProduct")
-    public ResponseEntity<Object> getAllProductPage(@RequestParam(defaultValue = "0", required = false) int page,
+    public ResponseEntity<Object> getAllProductPage(@RequestParam(required = false) String productName,
+                                                    @RequestParam(defaultValue = "0", required = false) int page,
                                                     @RequestParam(defaultValue = "10", required = false) int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<ProductDTO> productDTOPage = productService.getAllProductPage(pageable);
+            Page<ProductDTO> productDTOPage = productService.getAllProductPage(productName, pageable);
             return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

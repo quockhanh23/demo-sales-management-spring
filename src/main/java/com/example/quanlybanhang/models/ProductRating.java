@@ -13,12 +13,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Star {
+public class ProductRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 5)
-    private String numberOfStars;
+    private String numberOfRate;
     private Long productId;
     private Long idUser;
     private Date createdAt;

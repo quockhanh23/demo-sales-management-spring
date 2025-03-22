@@ -82,8 +82,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> getAllProductPage(Pageable pageable) throws IOException {
-        Page<Product> page = productRepository.getAllProductPage(pageable);
+    public Page<ProductDTO> getAllProductPage(String productName, Pageable pageable) throws IOException {
+        if (StringUtils.isEmpty(productName)) productName = null;
+        Page<Product> page = productRepository.getAllProductPage(productName, pageable);
         List<Product> productList = page.getContent();
         List<ProductDTO> productDTOList = convertToProductDTO(productList);
         return new PageImpl<>(productDTOList);

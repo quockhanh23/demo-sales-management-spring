@@ -26,6 +26,5 @@ public class Address {
     private String province;
     private String district;
     private String ward;
-    private String street;
     private Long idUser;
 }

@@ -1,8 +1,8 @@
 package com.example.quanlybanhang.controller;
 
 
-import com.example.quanlybanhang.models.Star;
-import com.example.quanlybanhang.service.StarService;
+import com.example.quanlybanhang.models.ProductRating;
+import com.example.quanlybanhang.service.ProductRatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,27 +14,27 @@ import java.util.List;
 @CrossOrigin("*")
 @RequestMapping("/api/stars")
 @RequiredArgsConstructor
-public class StarController {
+public class ProductRatingController {
 
-    private final StarService starService;
+    private final ProductRatingService productRatingService;
 
     @GetMapping("/get-star")
     public ResponseEntity<Object> getAllStarByProduct(@RequestParam Long idProduct) {
-        List<Star> list = starService.findAllByProductId(idProduct);
+        List<ProductRating> list = productRatingService.findAllByProductId(idProduct);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping("/get-star-by-user")
     public ResponseEntity<Object> getAllStarByUserAndProduct(@RequestParam Long idUser,
                                                              @RequestParam Long idProduct) {
-        Star star = starService.findStarByUserAndProduct(idUser, idProduct);
-        return new ResponseEntity<>(star, HttpStatus.OK);
+        ProductRating productRating = productRatingService.findStarByUserAndProduct(idUser, idProduct);
+        return new ResponseEntity<>(productRating, HttpStatus.OK);
     }
 
     @GetMapping("/star-level")
     public ResponseEntity<Object> getAllStarByProductAndLevel(@RequestParam Long idProduct,
                                                               @RequestParam String type) {
-        List<Star> list = starService.findAllByProductIdAndType(idProduct, type);
+        List<ProductRating> list = productRatingService.findAllByProductIdAndType(idProduct, type);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
@@ -42,8 +42,8 @@ public class StarController {
     public ResponseEntity<Object> create(@RequestParam Long idProduct,
                                          @RequestParam Long idUser,
                                          @RequestParam String type) {
-        Star star = starService.initStar(idUser, idProduct, type);
-        starService.save(star);
+        ProductRating productRating = productRatingService.initStar(idUser, idProduct, type);
+        productRatingService.save(productRating);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

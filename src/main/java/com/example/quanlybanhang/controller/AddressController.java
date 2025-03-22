@@ -34,7 +34,7 @@ public class AddressController {
         return new ResponseEntity<>(addressList, HttpStatus.OK);
     }
 
-    @GetMapping("/create-address")
+    @PostMapping("/create-address")
     public ResponseEntity<Object> createAddress(@RequestParam Long idUser,
                                                 @RequestBody Address address) {
         userService.checkExistUser(idUser);
