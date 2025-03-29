@@ -13,9 +13,9 @@ import java.nio.file.Paths;
 
 public class CommonUtils {
 
-    public static byte[] convertStringImageToByte(String image) throws IOException {
-        if (StringUtils.isNotEmpty(image)) {
-            return Files.readAllBytes(Paths.get(image));
+    public static byte[] convertStringImageToByte(String imageUrl) throws IOException {
+        if (StringUtils.isNotEmpty(imageUrl)) {
+            return Files.readAllBytes(Paths.get(imageUrl));
         } else {
             String defaultImageURL = UploadFileConstant.SRC_IMAGE_PROJECT + SalesManagementConstants.DEFAULT_NO_IMAGE;
             return Files.readAllBytes(Paths.get(defaultImageURL));

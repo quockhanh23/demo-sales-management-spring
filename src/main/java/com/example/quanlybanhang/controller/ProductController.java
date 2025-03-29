@@ -2,17 +2,14 @@ package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.common.CommonUtils;
 import com.example.quanlybanhang.dto.ProductDTO;
-import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.Product;
 import com.example.quanlybanhang.service.ProductService;
 import com.example.quanlybanhang.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
