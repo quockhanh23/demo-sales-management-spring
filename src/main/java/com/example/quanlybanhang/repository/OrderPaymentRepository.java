@@ -10,5 +10,8 @@ import java.util.List;
 @Repository
 public interface OrderPaymentRepository extends JpaRepository<OrderPayment, Long> {
 
-    List<OrderPayment> getAllOrderPaymentByIdUserAndOrderPaymentStatus(Long idUser, OrderPaymentStatus orderPaymentStatus);
+    List<OrderPayment> getAllOrderPaymentByIdUserAndOrderPaymentStatus
+            (Long idUser, OrderPaymentStatus orderPaymentStatus);
+
+    List<OrderPayment> getAllOrderPaymentByIdUser(Long idUser);
 }

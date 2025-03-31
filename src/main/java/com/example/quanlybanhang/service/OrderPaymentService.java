@@ -9,7 +9,7 @@ public interface OrderPaymentService {
 
     OrderPayment createOrderPayment(OrderPayment orderPayment);
 
-    OrderPayment updateStatusOrderPayment(Long idOrderPayment, String status);
+    OrderPayment updateStatusOrderPayment(Long idOrderPayment, OrderPaymentStatus status);
 
     OrderPayment getDetailOrderPayment(Long idOrderPayment);
 

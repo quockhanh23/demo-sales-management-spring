@@ -8,10 +8,9 @@ import com.example.quanlybanhang.service.OrderPaymentService;
 import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +44,9 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
     }
 
     @Override
-    public OrderPayment updateStatusOrderPayment(Long idOrderPayment, String status) {
+    public OrderPayment updateStatusOrderPayment(Long idOrderPayment, OrderPaymentStatus status) {
         OrderPayment orderPayment = getDetailOrderPayment(idOrderPayment);
+        orderPayment.setOrderPaymentStatus(status);
         return orderPaymentRepository.save(orderPayment);
     }
 
@@ -60,6 +60,14 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
     @Override
     public List<OrderPayment> getAllOrderPaymentByIdUserAndOrderPaymentStatus
             (Long idUser, OrderPaymentStatus orderPaymentStatus) {
-        return orderPaymentRepository.getAllOrderPaymentByIdUserAndOrderPaymentStatus(idUser, orderPaymentStatus);
+        List<OrderPayment> orderPaymentList;
+        if (Objects.isNull(orderPaymentStatus)) {
+            orderPaymentList = orderPaymentRepository.getAllOrderPaymentByIdUser(idUser);
+        } else {
+            orderPaymentList = orderPaymentRepository.
+                    getAllOrderPaymentByIdUserAndOrderPaymentStatus(idUser, orderPaymentStatus);
+        }
+        if (CollectionUtils.isEmpty(orderPaymentList)) return new ArrayList<>();
+        return orderPaymentList;
     }
 }

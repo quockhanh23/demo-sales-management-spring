@@ -29,8 +29,9 @@ public class OrderPaymentController {
         return new ResponseEntity<>(orderPaymentResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/update-status-payment")
-    public ResponseEntity<Object> updateStatusPayment(@RequestParam Long idOrderPayment, @RequestParam String status) {
+    @PutMapping("/update-status-payment")
+    public ResponseEntity<Object> updateStatusPayment(@RequestParam Long idOrderPayment,
+                                                      @RequestParam OrderPaymentStatus status) {
         OrderPayment orderPaymentResponse = orderPaymentService.updateStatusOrderPayment(idOrderPayment, status);
         return new ResponseEntity<>(orderPaymentResponse, HttpStatus.OK);
     }
@@ -38,7 +39,7 @@ public class OrderPaymentController {
     @GetMapping("/get-all-order-payment")
     public ResponseEntity<Object> getAllOrderPaymentByIdUserAndOrderPaymentStatus
             (@RequestParam Long idUser,
-             @RequestParam OrderPaymentStatus orderPaymentStatus) {
+             @RequestParam(required = false) OrderPaymentStatus orderPaymentStatus) {
         List<OrderPayment> orderPaymentList = orderPaymentService
                 .getAllOrderPaymentByIdUserAndOrderPaymentStatus(idUser, orderPaymentStatus);
         return new ResponseEntity<>(orderPaymentList, HttpStatus.OK);
