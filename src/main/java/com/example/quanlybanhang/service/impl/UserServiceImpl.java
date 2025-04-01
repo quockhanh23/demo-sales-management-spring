@@ -2,14 +2,17 @@ package com.example.quanlybanhang.service.impl;
 
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
+import com.example.quanlybanhang.dto.ResetPassword;
 import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.repository.UserRepository;
 import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -45,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String username, String pin, String newPassword, String confirmPassword) {
+    public User resetPassword(String username, String pin) {
         Optional<User> user = findUserByUsername(username);
         if (user.isEmpty()) {
             throw new InvalidException(MessageConstants.NOT_FOUND_USER);
@@ -53,17 +56,31 @@ public class UserServiceImpl implements UserService {
         if (!user.get().getPin().equals(pin)) {
             throw new InvalidException("Sai mã pin");
         }
-        if (StringUtils.isEmpty(newPassword)) {
+        User userResponse = new User();
+        String newPassword = RandomStringUtils.randomAlphanumeric(10);
+        userResponse.setPassword(newPassword);
+        user.get().setPassword(newPassword);
+        user.get().setConfirmPassword(newPassword);
+        user.get().setUpdatedAt(new Date());
+        userRepository.save(user.get());
+        return userResponse;
+    }
+
+    @Override
+    public void changePassword(ResetPassword resetPassword, Long idUser) {
+        User user = checkExistUser(idUser);
+        if (StringUtils.isEmpty(resetPassword.getNewPassword())) {
             throw new InvalidException("Bạn chưa nhập mật khẩu mới");
-        } else if (newPassword.length() > 32 || newPassword.length() < 6) {
+        } else if (resetPassword.getNewPassword().length() > 32 || resetPassword.getNewPassword().length() < 6) {
             throw new InvalidException("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
         }
-        if (!newPassword.equals(confirmPassword)) {
+        if (!resetPassword.getNewPassword().equals(resetPassword.getConfirmPassword())) {
             throw new InvalidException("Xác nhận lại mật khẩu không đúng");
         }
-        user.get().setPassword(newPassword);
-        user.get().setConfirmPassword(confirmPassword);
-        userRepository.save(user.get());
+        user.setPassword(resetPassword.getNewPassword());
+        user.setConfirmPassword(resetPassword.getConfirmPassword());
+        user.setUpdatedAt(new Date());
+        userRepository.save(user);
     }
 
     @Override

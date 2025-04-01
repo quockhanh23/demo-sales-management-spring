@@ -3,6 +3,7 @@ package com.example.quanlybanhang.controller;
 import com.example.quanlybanhang.models.Category;
 import com.example.quanlybanhang.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -30,6 +31,10 @@ public class CategoryController {
 
     @PostMapping("/create-category")
     public ResponseEntity<Object> createCategory(@RequestBody Category category) {
+        if (StringUtils.isNotEmpty(category.getContent())) {
+            category.setContent(category.getContent().trim());
+        }
+        category.setCreatedAt(new Date());
         categoryRepository.save(category);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -1,5 +1,6 @@
 package com.example.quanlybanhang.service;
 
+import com.example.quanlybanhang.dto.ResetPassword;
 import com.example.quanlybanhang.models.User;
 
 import java.util.Optional;
@@ -14,7 +15,9 @@ public interface UserService {
 
     Optional<User> findUserByUsername(String username);
 
-    void resetPassword(String username, String pin, String newPassword, String confirmPassword);
+    User resetPassword(String username, String pin);
+
+    void changePassword(ResetPassword resetPassword, Long idUser);
 
     void checkRoleAdmin(Long idUser);
 

@@ -10,6 +10,7 @@ import lombok.Setter;
 public class ResetPassword {
     private String username;
     private String pin;
+    private String oldPassword;
     private String newPassword;
     private String confirmPassword;
 }

@@ -49,11 +49,15 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/reset-password")
+    @PutMapping("/reset-password")
     public ResponseEntity<Object> resetPassword(@RequestBody ResetPassword user) {
+        return new ResponseEntity<>(userService.resetPassword(user.getUsername(), user.getPin()), HttpStatus.OK);
+    }
 
-        userService.resetPassword(user.getUsername(), user.getPin(),
-                user.getNewPassword(), user.getConfirmPassword());
+    @PutMapping("/change-password")
+    public ResponseEntity<Object> changePassword(@RequestBody ResetPassword resetPassword,
+                                                 @RequestParam Long idUser) {
+        userService.changePassword(resetPassword, idUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

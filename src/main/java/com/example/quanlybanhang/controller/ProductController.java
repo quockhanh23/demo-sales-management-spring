@@ -90,6 +90,7 @@ public class ProductController {
             ProductDTO productDTO = new ProductDTO();
             Product product = productService.checkExistProduct(idProduct);
             BeanUtils.copyProperties(product, productDTO);
+            productDTO.setId(product.getIdProduct());
             productDTO.setImage(CommonUtils.convertStringImageToByte(product.getImage()));
             return new ResponseEntity<>(productDTO, HttpStatus.OK);
         } catch (Exception e) {
