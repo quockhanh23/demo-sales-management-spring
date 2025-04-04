@@ -14,4 +14,6 @@ public interface OrderPaymentRepository extends JpaRepository<OrderPayment, Long
             (Long idUser, OrderPaymentStatus orderPaymentStatus);
 
     List<OrderPayment> getAllOrderPaymentByIdUser(Long idUser);
+
+    List<OrderPayment> getAllOrderPaymentByOrderPaymentStatus(OrderPaymentStatus status);
 }

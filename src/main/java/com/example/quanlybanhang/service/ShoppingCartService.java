@@ -28,6 +28,4 @@ public interface ShoppingCartService {
     ShoppingCartDTO getAllProductInCart(Long idUser) throws IOException;
 
     void changeStatus(Long idOrderProduct, Long idUser, String status);
-
-    List<ShoppingCartDTO> getAllComplete(Long idUser);
 }

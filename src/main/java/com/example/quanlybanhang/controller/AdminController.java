@@ -1,11 +1,13 @@
 package com.example.quanlybanhang.controller;
 
-
+import com.example.quanlybanhang.common.OrderPaymentStatus;
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.dto.UserDTO;
 import com.example.quanlybanhang.exeption.InvalidException;
+import com.example.quanlybanhang.models.OrderPayment;
 import com.example.quanlybanhang.models.User;
+import com.example.quanlybanhang.repository.OrderPaymentRepository;
 import com.example.quanlybanhang.repository.UserRepository;
 import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final OrderPaymentRepository orderPaymentRepository;
     private final UserRepository userRepository;
 
     @GetMapping("/get-all-user")
@@ -46,7 +49,7 @@ public class AdminController {
         return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
-    @GetMapping("/user-action")
+    @PostMapping("/user-action")
     public ResponseEntity<Object> userAction(@RequestParam Long idAdmin,
                                              @RequestParam Long idUser,
                                              @RequestParam String type) {
@@ -58,5 +61,13 @@ public class AdminController {
             userService.banUser(idAdmin, idUser);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/order-waiting")
+    public ResponseEntity<Object> getAllOrderWaiting(@RequestParam Long idAdmin) {
+        userService.checkExistUser(idAdmin);
+        List<OrderPayment> orderPaymentList = orderPaymentRepository
+                .getAllOrderPaymentByOrderPaymentStatus(OrderPaymentStatus.ORDER_SUCCESSFUL);
+        return new ResponseEntity<>(orderPaymentList, HttpStatus.OK);
     }
 }

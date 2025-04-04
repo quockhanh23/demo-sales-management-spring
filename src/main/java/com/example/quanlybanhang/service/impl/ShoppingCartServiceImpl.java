@@ -248,25 +248,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         productService.saveAll(productSet);
     }
 
-    @Override
-    public List<ShoppingCartDTO> getAllComplete(Long idUser) {
-        User user = userService.checkExistUser(idUser);
-        List<ShoppingCartDTO> shoppingCartDTOS = new ArrayList<>();
-        List<ShoppingCart> shoppingCartList = shoppingCartRepository
-                .getAllByUserAndStatus(user, SalesManagementConstants.STATUS_ORDER_BOUGHT);
-        if (CollectionUtils.isEmpty(shoppingCartList)) return new ArrayList<>();
-        for (ShoppingCart shoppingCart : shoppingCartList) {
-            List<ShoppingCartDetail> shoppingCartDetails = shoppingCart.getProductDetails()
-                    .stream()
-                    .filter(item -> item.getStatus().equals(ShoppingCartDetailStatus.IN_CART)).toList();
-            shoppingCart.setProductDetails(shoppingCartDetails);
-            ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
-            BeanUtils.copyProperties(shoppingCart, shoppingCartDTO);
-            shoppingCartDTOS.add(shoppingCartDTO);
-        }
-        return shoppingCartDTOS;
-    }
-
     private ShoppingCartDetail initOrderProductDetail(Product product) {
         ShoppingCartDetail shoppingCartDetail = new ShoppingCartDetail();
         shoppingCartDetail.setIdProduct(product.getIdProduct());
