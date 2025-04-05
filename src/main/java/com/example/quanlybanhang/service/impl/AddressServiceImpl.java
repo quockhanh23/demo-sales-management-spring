@@ -26,6 +26,8 @@ public class AddressServiceImpl implements AddressService {
         if (CollectionUtils.isEmpty(addressList)) {
             address.setInUse(true);
         }
+        address.setInUse(false);
+        address.setCreatedAt(new Date());
         address.setStatus(AddressStatus.ACTIVE);
         addressRepository.save(address);
     }
