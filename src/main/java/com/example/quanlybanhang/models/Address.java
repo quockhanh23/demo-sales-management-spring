@@ -2,6 +2,7 @@ package com.example.quanlybanhang.models;
 
 import com.example.quanlybanhang.common.AddressStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Address {
     private String province;
     private String district;
     private String ward;
+    @NotNull
     private Long idUser;
     private Boolean inUse;
     @Column(length = 10)

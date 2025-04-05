@@ -22,6 +22,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void createAddress(Address address) {
+        List<Address> addressList = getAllByIdUser(address.getIdUser());
+        if (CollectionUtils.isEmpty(addressList)) {
+            address.setInUse(true);
+        }
         address.setStatus(AddressStatus.ACTIVE);
         addressRepository.save(address);
     }
@@ -30,7 +34,7 @@ public class AddressServiceImpl implements AddressService {
     public void selectAddress(Long idUser, Long idAddress) {
         List<Address> addressList = getAllByIdUser(idUser);
         if (!CollectionUtils.isEmpty(addressList)) {
-            addressList.forEach(address1 -> address1.setInUse(false));
+            addressList.forEach(item -> item.setInUse(false));
         }
         Address address = getDetailAddress(idAddress);
         address.setInUse(true);
@@ -43,7 +47,7 @@ public class AddressServiceImpl implements AddressService {
     public Address getDetailAddress(Long idAddress) {
         Optional<Address> addressOptional = addressRepository.findById(idAddress);
         if (addressOptional.isEmpty()) {
-            throw new InvalidException("Not found");
+            throw new InvalidException("Not found Address by Id: " + idAddress);
         } else {
             return addressOptional.get();
         }
