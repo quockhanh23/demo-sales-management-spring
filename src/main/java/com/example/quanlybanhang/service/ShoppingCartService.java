@@ -2,11 +2,9 @@ package com.example.quanlybanhang.service;
 
 import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.dto.ShoppingCartDTO;
-import com.example.quanlybanhang.dto.ShoppingCartDetailDTO;
 import com.example.quanlybanhang.models.ShoppingCart;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 public interface ShoppingCartService {
@@ -26,6 +24,8 @@ public interface ShoppingCartService {
     void increaseProduct(Long idUser, Long idProduct);
 
     ShoppingCartDTO getAllProductInCart(Long idUser) throws IOException;
+
+    ShoppingCartDTO getAllProductInOrder(Long idShoppingCart) throws IOException;
 
     void changeStatus(Long idOrderProduct, Long idUser, String status);
 }

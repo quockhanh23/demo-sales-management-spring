@@ -18,9 +18,7 @@ public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private User user;
+    private Long idUser;
     private Date createdAt;
     private Date updatedAt;
     @Column(length = 20)

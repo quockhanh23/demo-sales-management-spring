@@ -1,0 +1,1 @@
+INSERT INTO demo_sales_management.user (avatar, confirm_password, created_at, date_of_birth, full_name, is_buyer, password, phone, pin, role, status, updated_at, username) VALUES (null, '123456', '2025-04-03 20:33:23', '2025-04-03 20:33:26', null, false, '123456', '9323023099', '12345678', 'ROLE_BUYER', 'ACTIVE', '2025-04-01 14:05:08.589000', 'khanh');

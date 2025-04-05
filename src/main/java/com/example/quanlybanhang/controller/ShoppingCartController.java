@@ -2,15 +2,11 @@ package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.dto.ProductDTO;
 import com.example.quanlybanhang.dto.ShoppingCartDTO;
-import com.example.quanlybanhang.exeption.InvalidException;
-import com.example.quanlybanhang.models.ShoppingCart;
 import com.example.quanlybanhang.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -62,9 +58,14 @@ public class ShoppingCartController {
 
     @GetMapping("/get-detail-shopping-cart")
     public ResponseEntity<Object> getDetailShoppingCartById(@RequestParam Long idShoppingCart) {
-        Optional<ShoppingCart> shoppingCart = shoppingCartService.findById(idShoppingCart);
-        if (shoppingCart.isEmpty()) throw new InvalidException("Không tìm thấy");
-        return new ResponseEntity<>(shoppingCart.get(), HttpStatus.OK);
+        ShoppingCartDTO getAllProductInCart;
+        try {
+            getAllProductInCart = shoppingCartService.getAllProductInOrder(idShoppingCart);
+            return new ResponseEntity<>(getAllProductInCart, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/change-status")
