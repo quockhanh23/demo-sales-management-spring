@@ -68,6 +68,9 @@ public class ProductServiceImpl implements ProductService {
         if (product.getDescription().length() > 500) {
             throw new InvalidException(MessageConstants.PRODUCT_DESCRIPTION_MAX_SIZE);
         }
+        if (StringUtils.isEmpty(product.getImage())) {
+            throw new InvalidException(MessageConstants.IMAGE_NOT_EMPTY);
+        }
         product.setStatus(SalesManagementConstants.STATUS_ACTIVE);
         product.setCreatedAt(new Date());
     }

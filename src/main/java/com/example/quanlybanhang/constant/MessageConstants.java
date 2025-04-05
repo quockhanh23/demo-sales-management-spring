@@ -10,6 +10,7 @@ public class MessageConstants {
     public static final String NOT_FOUND_PRODUCT = "Không tìm thấy sản phẩm";
     public static final String WRONG_PASS = "Mật khẩu không đúng";
     public static final String PRODUCT_NAME_NOT_EMPTY = "Tên sản phẩm không được để trống";
+    public static final String IMAGE_NOT_EMPTY = "Ảnh sản phẩm không được để trống";
     public static final String PRODUCT_PRICE_NOT_EMPTY = "Giá sản phẩm không được để trống";
     public static final String PRODUCT_QUANTITY_MUST_GREAT_THAN_ZERO = "Số lượng sản phẩm phải lớn hơn 0";
     public static final String PRODUCT_DESCRIPTION_MAX_SIZE = "Mô tả sản phẩm không quá 500 kí tự";
