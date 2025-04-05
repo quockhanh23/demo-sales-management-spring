@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.*;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,8 +39,15 @@ public class AddressController {
     public ResponseEntity<Object> getAddressInUse(@RequestParam Long idUser) {
         userService.checkExistUser(idUser);
         List<Address> addressList = addressService.getAllByIdUser(idUser);
-        Address address = addressList.stream()
-                .filter(i -> Boolean.TRUE.equals(i.getInUse())).findFirst().orElse(addressList.get(0));
+        Address address;
+        if (CollectionUtils.isEmpty(addressList)) {
+            address = null;
+        } else {
+            address = addressList.stream()
+                    .filter(i -> Boolean.TRUE.equals(i.getInUse()))
+                    .findFirst()
+                    .orElse(addressList.get(0));
+        }
         return new ResponseEntity<>(address, HttpStatus.OK);
     }
 

@@ -43,6 +43,7 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
         userService.checkExistUser(orderPayment.getIdUser());
         orderPayment.setOrderPaymentStatus(OrderPaymentStatus.ORDER_SUCCESSFUL);
         orderPayment.setCreatedAt(new Date());
+        orderPayment.setDeliveryMethod("COD");
         OrderPayment orderPayment1 = orderPaymentRepository.save(orderPayment);
         OrderPaymentHistory orderPaymentHistory =
                 initOrderPaymentHistory(orderPayment1.getOrderPaymentStatus(), orderPayment1.getId());
