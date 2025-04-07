@@ -111,6 +111,9 @@ public class UserServiceImpl implements UserService {
         if (user.getPin().length() != 8) {
             throw new InvalidException("Số pin chỉ có 8 số");
         }
+        if (StringUtils.isEmpty(user.getFullName())) {
+            throw new InvalidException("Bạn chưa nhập họ tên đầy đủ");
+        }
         user.setStatus(SalesManagementConstants.STATUS_ACTIVE);
         user.setRole(SalesManagementConstants.ROLE_BUYER);
         if (user.getRole().equals(SalesManagementConstants.ROLE_ADMIN)) {

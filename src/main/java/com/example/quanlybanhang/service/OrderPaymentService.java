@@ -16,4 +16,6 @@ public interface OrderPaymentService {
     List<OrderPayment> getAllOrderPaymentByIdUserAndOrderPaymentStatus
             (Long idUser, OrderPaymentStatus orderPaymentStatus);
 
+    List<OrderPayment> getAllOrderPaymentByOrderPaymentStatus(OrderPaymentStatus orderPaymentStatus);
+
 }

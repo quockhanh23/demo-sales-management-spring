@@ -72,7 +72,7 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
     @Override
     public OrderPayment getDetailOrderPayment(Long idOrderPayment) {
         Optional<OrderPayment> optionalOrderPayment = orderPaymentRepository.findById(idOrderPayment);
-        if (optionalOrderPayment.isEmpty()) throw new InvalidException("Không tìm thấy OrderPayment");
+        if (optionalOrderPayment.isEmpty()) throw new InvalidException("Không tìm thấy Đơn hàng");
         return optionalOrderPayment.get();
     }
 
@@ -86,6 +86,14 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
             orderPaymentList = orderPaymentRepository.
                     getAllOrderPaymentByIdUserAndOrderPaymentStatus(idUser, orderPaymentStatus);
         }
+        if (CollectionUtils.isEmpty(orderPaymentList)) return new ArrayList<>();
+        return orderPaymentList;
+    }
+
+    @Override
+    public List<OrderPayment> getAllOrderPaymentByOrderPaymentStatus(OrderPaymentStatus orderPaymentStatus) {
+        List<OrderPayment> orderPaymentList = orderPaymentRepository
+                .getAllOrderPaymentByOrderPaymentStatus(orderPaymentStatus);
         if (CollectionUtils.isEmpty(orderPaymentList)) return new ArrayList<>();
         return orderPaymentList;
     }

@@ -38,10 +38,17 @@ public class OrderPaymentController {
 
     @GetMapping("/get-all-order-payment")
     public ResponseEntity<Object> getAllOrderPaymentByIdUserAndOrderPaymentStatus
-            (@RequestParam Long idUser,
-             @RequestParam(required = false) OrderPaymentStatus orderPaymentStatus) {
+            (@RequestParam Long idUser, @RequestParam(required = false) OrderPaymentStatus orderPaymentStatus) {
         List<OrderPayment> orderPaymentList = orderPaymentService
                 .getAllOrderPaymentByIdUserAndOrderPaymentStatus(idUser, orderPaymentStatus);
+        return new ResponseEntity<>(orderPaymentList, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-payment")
+    public ResponseEntity<Object> getAllOrderPaymentByOrderPaymentStatus
+            (@RequestParam(required = false) OrderPaymentStatus orderPaymentStatus) {
+        List<OrderPayment> orderPaymentList = orderPaymentService
+                .getAllOrderPaymentByOrderPaymentStatus(orderPaymentStatus);
         return new ResponseEntity<>(orderPaymentList, HttpStatus.OK);
     }
 
