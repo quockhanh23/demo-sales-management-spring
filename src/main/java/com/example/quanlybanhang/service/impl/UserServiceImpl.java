@@ -102,6 +102,10 @@ public class UserServiceImpl implements UserService {
         if (!StringUtils.isEmpty(user.getUsername()) && user.getUsername().length() > 50) {
             throw new InvalidException("Tên đăng nhập vượt quá 50 kí tự");
         }
+        Optional<User> userOptional = findUserByUsername(user.getUsername());
+        if (userOptional.isPresent()) {
+            throw new InvalidException("Tên đăng nhập đã tồn tại");
+        }
         if (user.getPassword().length() > 32 || user.getPassword().length() < 6) {
             throw new InvalidException("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
         }
