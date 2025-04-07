@@ -96,7 +96,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void validateUser(User user) {
-        if (user.getUsername().length() > 50) {
+        if (StringUtils.isEmpty(user.getUsername())) {
+            throw new InvalidException("Bạn chưa điền tên đăng nhập");
+        }
+        if (!StringUtils.isEmpty(user.getUsername()) && user.getUsername().length() > 50) {
             throw new InvalidException("Tên đăng nhập vượt quá 50 kí tự");
         }
         if (user.getPassword().length() > 32 || user.getPassword().length() < 6) {
@@ -122,6 +125,7 @@ public class UserServiceImpl implements UserService {
         if (user.getRole().equals(SalesManagementConstants.ROLE_ADMIN)) {
             user.setRole(SalesManagementConstants.ROLE_ADMIN);
         }
+        user.setCreatedAt(new Date());
         userRepository.save(user);
     }
 
