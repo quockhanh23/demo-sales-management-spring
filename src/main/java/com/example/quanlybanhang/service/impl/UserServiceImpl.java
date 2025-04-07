@@ -97,13 +97,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void validateUser(User user) {
         if (user.getUsername().length() > 50) {
-            throw new InvalidException("User name vượt quá 50 kí tự");
-        }
-        if (!user.getPassword().equals(user.getConfirmPassword())) {
-            throw new InvalidException("Xác nhận lại mật khẩu không đúng");
+            throw new InvalidException("Tên đăng nhập vượt quá 50 kí tự");
         }
         if (user.getPassword().length() > 32 || user.getPassword().length() < 6) {
             throw new InvalidException("Mật khẩu phải lớn hơn 6 hoặc nhỏ hơn 32 kí tự");
+        }
+        if (!user.getPassword().equals(user.getConfirmPassword())) {
+            throw new InvalidException("Xác nhận lại mật khẩu không đúng");
         }
         if (user.getPhone().length() != 10) {
             throw new InvalidException("Số điện thoại chỉ có 10 số thôi");
@@ -113,6 +113,9 @@ public class UserServiceImpl implements UserService {
         }
         if (StringUtils.isEmpty(user.getFullName())) {
             throw new InvalidException("Bạn chưa nhập họ tên đầy đủ");
+        }
+        if (!StringUtils.isEmpty(user.getFullName()) && user.getFullName().length() > 100) {
+            throw new InvalidException("Họ tên vượt quá 100 kí tự");
         }
         user.setStatus(SalesManagementConstants.STATUS_ACTIVE);
         user.setRole(SalesManagementConstants.ROLE_BUYER);
