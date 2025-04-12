@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Date;
 import java.util.Optional;
 
 @SpringBootApplication
@@ -22,7 +23,7 @@ public class QuanlybanhangApplication {
     }
 
     @Bean
-    CommandLineRunner run(UserRepository userRepository) {
+    public CommandLineRunner run(UserRepository userRepository) {
         return args ->
         {
             Optional<User> adminOptional = userRepository.findUserByUsername("admin");
@@ -34,6 +35,8 @@ public class QuanlybanhangApplication {
                 admin.setPassword("admin");
                 admin.setConfirmPassword("admin");
                 admin.setPin("12345678");
+                admin.setCreatedAt(new Date());
+                admin.setUpdatedAt(new Date());
                 userRepository.save(admin);
             }
         };
