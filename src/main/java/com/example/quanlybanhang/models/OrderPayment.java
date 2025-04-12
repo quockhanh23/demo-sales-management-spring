@@ -30,7 +30,8 @@ public class OrderPayment {
     @NotNull
     private String totalOrderAmount;
     private String deliveryMethod;
-    private String estimatedDelivery;
+    private Date estimatedDelivery;
+    private boolean estimatedOverdue;
     private Date createdAt;
     private Date updatedAt;
     private OrderPaymentStatus orderPaymentStatus;

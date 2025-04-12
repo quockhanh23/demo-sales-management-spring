@@ -32,9 +32,6 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
         if (orderPayment.getIdShoppingCart() == null) {
             throw new InvalidException("Không tìm thấy idShoppingCart");
         }
-        if (orderPayment.getEstimatedDelivery() == null) {
-            throw new InvalidException("Không tìm thấy estimatedDelivery");
-        }
     }
 
     @Override
@@ -44,6 +41,14 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
         orderPayment.setOrderPaymentStatus(OrderPaymentStatus.ORDER_SUCCESSFUL);
         orderPayment.setCreatedAt(new Date());
         orderPayment.setDeliveryMethod("COD");
+
+        Date today = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.add(Calendar.DAY_OF_MONTH, 3);
+        Date futureDate = calendar.getTime();
+
+        orderPayment.setEstimatedDelivery(futureDate);
         OrderPayment orderPayment1 = orderPaymentRepository.save(orderPayment);
         OrderPaymentHistory orderPaymentHistory =
                 initOrderPaymentHistory(orderPayment1.getOrderPaymentStatus(), orderPayment1.getId());
@@ -69,10 +74,22 @@ public class OrderPaymentServiceImpl implements OrderPaymentService {
         return orderPaymentRepository.save(orderPayment);
     }
 
+    private boolean checkEstimatedOverdue(Date estimatedDeliveryDate) {
+        Date today = new Date();
+        return today.compareTo(estimatedDeliveryDate) < 0;
+    }
+
     @Override
     public OrderPayment getDetailOrderPayment(Long idOrderPayment) {
         Optional<OrderPayment> optionalOrderPayment = orderPaymentRepository.findById(idOrderPayment);
         if (optionalOrderPayment.isEmpty()) throw new InvalidException("Không tìm thấy Đơn hàng");
+        if (optionalOrderPayment.get().getOrderPaymentStatus().equals(OrderPaymentStatus.ORDER_CONFIRM)) {
+            boolean check = checkEstimatedOverdue(optionalOrderPayment.get().getEstimatedDelivery());
+            if (check) {
+                optionalOrderPayment.get().setEstimatedOverdue(true);
+                orderPaymentRepository.save(optionalOrderPayment.get());
+            }
+        }
         return optionalOrderPayment.get();
     }
 
