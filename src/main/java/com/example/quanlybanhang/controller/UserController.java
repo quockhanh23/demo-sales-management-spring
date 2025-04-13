@@ -2,6 +2,7 @@ package com.example.quanlybanhang.controller;
 
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.dto.ResetPassword;
+import com.example.quanlybanhang.dto.UserDTO;
 import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.service.UserService;
@@ -58,6 +59,13 @@ public class UserController {
     public ResponseEntity<Object> changePassword(@RequestBody ResetPassword resetPassword,
                                                  @RequestParam Long idUser) {
         userService.changePassword(resetPassword, idUser);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/update-information")
+    public ResponseEntity<Object> updateInformation(@RequestBody UserDTO userDTO,
+                                                    @RequestParam Long idUser) {
+        userService.updateInformation(userDTO, idUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

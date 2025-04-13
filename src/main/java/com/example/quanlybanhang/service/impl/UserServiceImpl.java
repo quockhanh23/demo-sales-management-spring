@@ -3,6 +3,7 @@ package com.example.quanlybanhang.service.impl;
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.dto.ResetPassword;
+import com.example.quanlybanhang.dto.UserDTO;
 import com.example.quanlybanhang.exeption.InvalidException;
 import com.example.quanlybanhang.models.User;
 import com.example.quanlybanhang.repository.UserRepository;
@@ -84,6 +85,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateInformation(UserDTO userDTO, Long idUser) {
+        User user = checkExistUser(idUser);
+        if (userDTO.getPhone().length() != 10) {
+            throw new InvalidException("Số điện thoại chỉ có 10 số thôi");
+        }
+        if (!StringUtils.isEmpty(userDTO.getFullName()) && userDTO.getFullName().length() > 100) {
+            throw new InvalidException("Họ tên vượt quá 100 kí tự");
+        }
+        if (StringUtils.isNotEmpty(userDTO.getFullName())) {
+            user.setFullName(userDTO.getFullName());
+        }
+        if (StringUtils.isNotEmpty(userDTO.getPhone())) {
+            user.setPhone(userDTO.getPhone());
+        }
+        user.setUpdatedAt(new Date());
+        userRepository.save(user);
+    }
+
+    @Override
     public void checkRoleAdmin(Long idUser) {
         Optional<User> user = findById(idUser);
         if (user.isEmpty()) {
@@ -121,7 +141,7 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isEmpty(user.getFullName())) {
             throw new InvalidException("Bạn chưa nhập họ tên đầy đủ");
         }
-        if (!StringUtils.isEmpty(user.getFullName()) && user.getFullName().length() > 100) {
+        if (StringUtils.isNotEmpty(user.getFullName()) && user.getFullName().length() > 100) {
             throw new InvalidException("Họ tên vượt quá 100 kí tự");
         }
         user.setStatus(SalesManagementConstants.STATUS_ACTIVE);
