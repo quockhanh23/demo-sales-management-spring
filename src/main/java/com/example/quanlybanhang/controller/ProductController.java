@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/products")
@@ -46,19 +44,12 @@ public class ProductController {
     }
 
     @PutMapping("/update-product")
-    public ResponseEntity<Object> updateInformationProduct(@RequestBody Product product,
+    public ResponseEntity<Object> updateInformationProduct(@RequestBody Product productRequest,
                                                            @RequestParam Long idProduct,
                                                            @RequestParam Long idUser) {
-
         userService.checkRoleAdmin(idUser);
-        Product productUpdate = productService.checkExistProduct(idProduct);
-        productUpdate.setStatus(product.getStatus());
-        productUpdate.setProductName(product.getProductName());
-        productUpdate.setQuantity(product.getQuantity());
-        productUpdate.setPrice(product.getPrice());
-        productUpdate.setUpdatedAt(new Date());
-        productService.save(productUpdate);
-        return new ResponseEntity<>(productUpdate, HttpStatus.OK);
+        productService.updateProduct(productRequest, idProduct);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-product")

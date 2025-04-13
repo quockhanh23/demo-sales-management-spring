@@ -26,5 +26,7 @@ public interface ProductService {
 
     Product checkExistProduct(Long idProduct);
 
+    void updateProduct(Product productRequest, Long idProduct);
+
     Page<ProductDTO> getAllProductPage(String productName, Pageable pageable) throws IOException;
 }

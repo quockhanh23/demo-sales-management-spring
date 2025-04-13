@@ -85,6 +85,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void updateProduct(Product productRequest, Long idProduct) {
+        Product product = checkExistProduct(idProduct);
+        product.setProductName(productRequest.getProductName());
+        product.setDescription(productRequest.getDescription());
+        product.setQuantity(productRequest.getQuantity());
+        product.setPrice(productRequest.getPrice());
+        product.setUpdatedAt(new Date());
+        productRepository.save(product);
+    }
+
+    @Override
     public Page<ProductDTO> getAllProductPage(String productName, Pageable pageable) throws IOException {
         Page<Product> page;
         if (StringUtils.isEmpty(productName)) {
