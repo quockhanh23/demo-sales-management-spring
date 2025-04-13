@@ -6,6 +6,7 @@ import com.example.quanlybanhang.models.Address;
 import com.example.quanlybanhang.repository.AddressRepository;
 import com.example.quanlybanhang.service.AddressService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -22,6 +23,18 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void createAddress(Address address) {
+        if (StringUtils.isEmpty(address.getProvince())) {
+            throw new InvalidException("Bạn chưa nhập địa chỉ Tỉnh/Thành Phố");
+        }
+        if (StringUtils.isEmpty(address.getDistrict())) {
+            throw new InvalidException("Bạn chưa nhập địa chỉ Quận/Huyện");
+        }
+        if (StringUtils.isEmpty(address.getWard())) {
+            throw new InvalidException("Bạn chưa nhập địa chỉ Phường/Xã");
+        }
+        if (StringUtils.isEmpty(address.getAddress())) {
+            throw new InvalidException("Bạn chưa nhập địa chỉ cụ thể");
+        }
         List<Address> addressList = getAllByIdUser(address.getIdUser());
         if (CollectionUtils.isEmpty(addressList)) {
             address.setInUse(true);

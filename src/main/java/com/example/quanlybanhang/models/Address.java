@@ -23,8 +23,11 @@ public class Address {
     private Date updatedAt;
     @Column(length = 300)
     private String address;
+    @Column(length = 150)
     private String province;
+    @Column(length = 150)
     private String district;
+    @Column(length = 150)
     private String ward;
     @NotNull
     private Long idUser;
