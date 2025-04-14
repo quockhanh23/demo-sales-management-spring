@@ -65,8 +65,8 @@ public class UserController {
     @PutMapping("/update-information")
     public ResponseEntity<Object> updateInformation(@RequestBody UserDTO userDTO,
                                                     @RequestParam Long idUser) {
-        userService.updateInformation(userDTO, idUser);
-        return new ResponseEntity<>(HttpStatus.OK);
+        UserDTO user = userService.updateInformation(userDTO, idUser);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/findByUserName")

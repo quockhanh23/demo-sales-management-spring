@@ -19,7 +19,8 @@ public interface UserService {
     User resetPassword(String username, String pin);
 
     void changePassword(ResetPassword resetPassword, Long idUser);
-    void updateInformation(UserDTO userDTO, Long idUser);
+
+    UserDTO updateInformation(UserDTO userDTO, Long idUser);
 
     void checkRoleAdmin(Long idUser);
 

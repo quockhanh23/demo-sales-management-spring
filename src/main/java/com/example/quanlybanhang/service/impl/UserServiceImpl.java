@@ -11,6 +11,7 @@ import com.example.quanlybanhang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -85,22 +86,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateInformation(UserDTO userDTO, Long idUser) {
+    public UserDTO updateInformation(UserDTO userUpdate, Long idUser) {
         User user = checkExistUser(idUser);
-        if (userDTO.getPhone().length() != 10) {
+        if (userUpdate.getPhone().length() != 10) {
             throw new InvalidException("Số điện thoại chỉ có 10 số thôi");
         }
-        if (!StringUtils.isEmpty(userDTO.getFullName()) && userDTO.getFullName().length() > 100) {
+        if (!StringUtils.isEmpty(userUpdate.getFullName()) && userUpdate.getFullName().length() > 100) {
             throw new InvalidException("Họ tên vượt quá 100 kí tự");
         }
-        if (StringUtils.isNotEmpty(userDTO.getFullName())) {
-            user.setFullName(userDTO.getFullName());
+        if (StringUtils.isNotEmpty(userUpdate.getFullName())) {
+            user.setFullName(userUpdate.getFullName());
         }
-        if (StringUtils.isNotEmpty(userDTO.getPhone())) {
-            user.setPhone(userDTO.getPhone());
+        if (StringUtils.isNotEmpty(userUpdate.getPhone())) {
+            user.setPhone(userUpdate.getPhone());
         }
         user.setUpdatedAt(new Date());
-        userRepository.save(user);
+        user = userRepository.save(user);
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(user, userDTO);
+        return userDTO;
     }
 
     @Override
