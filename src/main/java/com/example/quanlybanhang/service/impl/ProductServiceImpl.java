@@ -1,6 +1,7 @@
 package com.example.quanlybanhang.service.impl;
 
 import com.example.quanlybanhang.common.CommonUtils;
+import com.example.quanlybanhang.constant.CommonConstant;
 import com.example.quanlybanhang.constant.MessageConstants;
 import com.example.quanlybanhang.constant.SalesManagementConstants;
 import com.example.quanlybanhang.constant.UploadFileConstant;
@@ -96,12 +97,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> getAllProductPage(String productName, Pageable pageable) throws IOException {
+    public Page<ProductDTO> getAllProductPage(String productName, String stock, Pageable pageable) throws IOException {
         Page<Product> page;
         if (StringUtils.isEmpty(productName)) {
-            page = productRepository.getAllProductPage(pageable);
+            page = CommonConstant.IN_STOCK.equals(stock)
+                    ? productRepository.getAllProductPage(pageable)
+                    : productRepository.getAllProductPageOutStock(pageable);
         } else {
-            page = productRepository.getAllSearchProductPage(productName, pageable);
+            page = CommonConstant.IN_STOCK.equals(stock)
+                    ? productRepository.getAllSearchProductPage(productName, pageable)
+                    : productRepository.getAllSearchProductPageOutStock(productName, pageable);
         }
         List<Product> productList = page.getContent();
         List<ProductDTO> productDTOList = convertToProductDTO(productList);
@@ -118,6 +123,7 @@ public class ProductServiceImpl implements ProductService {
                 productDTO.setProductName(product.getProductName());
                 productDTO.setPrice(product.getPrice());
                 productDTO.setQuantity(product.getQuantity());
+                productDTO.setOutOfStock(product.isOutOfStock());
                 productDTOS.add(productDTO);
             }
         }

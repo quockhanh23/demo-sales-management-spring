@@ -290,6 +290,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             if (optionalValue.isPresent()) {
                 int value = optionalValue.get();
                 product.setQuantity(product.getQuantity() - value);
+                if (product.getQuantity() <= 0) {
+                    product.setOutOfStock(true);
+                }
             }
         }
         productService.saveAll(productSet);

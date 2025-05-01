@@ -14,4 +14,5 @@ public class ProductDTO {
     private String price;
     private int quantity;
     private byte[] image;
+    private boolean outOfStock;
 }

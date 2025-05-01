@@ -15,9 +15,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Set<Product> findAllByIdProductIn(List<Long> id);
 
-    @Query(value = "select * from product where (product_name LIKE CONCAT('%', :productName, '%')  OR :productName IS NULL) and is_delete = false and status = 'ACTIVE' and quantity > 0", nativeQuery = true)
+    @Query(value = "select * from product where (product_name LIKE " +
+            "CONCAT('%', :productName, '%')  OR :productName IS NULL) and is_delete = false and status = 'ACTIVE' and quantity > 0", nativeQuery = true)
     Page<Product> getAllSearchProductPage(String productName, Pageable pageable);
+
+    @Query(value = "select * from product where (product_name LIKE " +
+            "CONCAT('%', :productName, '%')  OR :productName IS NULL) and is_delete = false and status = 'ACTIVE' and quantity <= 0", nativeQuery = true)
+    Page<Product> getAllSearchProductPageOutStock(String productName, Pageable pageable);
 
     @Query(value = "select * from product where is_delete = false and status = 'ACTIVE' and quantity > 0", nativeQuery = true)
     Page<Product> getAllProductPage(Pageable pageable);
+
+    @Query(value = "select * from product where is_delete = false and status = 'ACTIVE' and quantity <= 0", nativeQuery = true)
+    Page<Product> getAllProductPageOutStock(Pageable pageable);
 }

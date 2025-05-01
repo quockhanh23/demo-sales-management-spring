@@ -28,5 +28,5 @@ public interface ProductService {
 
     void updateProduct(Product productRequest, Long idProduct);
 
-    Page<ProductDTO> getAllProductPage(String productName, Pageable pageable) throws IOException;
+    Page<ProductDTO> getAllProductPage(String productName, String stock, Pageable pageable) throws IOException;
 }

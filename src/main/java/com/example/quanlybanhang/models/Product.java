@@ -31,4 +31,5 @@ public class Product {
     private String description;
     private Date createdAt;
     private Date updatedAt;
+    private boolean outOfStock;
 }
