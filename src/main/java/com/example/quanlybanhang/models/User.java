@@ -34,7 +34,6 @@ public class User {
     private String status;
     @Column(length = 20)
     private String role;
-    private boolean isBuyer;
     @Lob
     private String avatar;
     private Date createdAt;
