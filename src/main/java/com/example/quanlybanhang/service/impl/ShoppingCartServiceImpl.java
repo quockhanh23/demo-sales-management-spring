@@ -144,6 +144,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (CollectionUtils.isEmpty(productDetails)) return;
         Optional<Product> product = productService.findById(idProduct);
         if (product.isEmpty()) throw new InvalidException(MessageConstants.NOT_FOUND_PRODUCT);
+        long countInCart = productDetails.stream()
+                .filter(item-> item.getStatus().equals(ShoppingCartDetailStatus.IN_CART)
+                        && item.getIdProduct().equals(idProduct)).count();
+        if (countInCart >= product.get().getQuantity()) {
+            throw new InvalidException("Không thể đặt quá số lượng sản phẩm");
+        }
         ShoppingCartDetail shoppingCartDetail = initOrderProductDetail(product.get());
         shoppingCartDetail.setQuantity(1);
         shoppingCartDetail.setStatus(ShoppingCartDetailStatus.IN_CART);
@@ -187,6 +193,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     .filter(item -> ShoppingCartDetailStatus.IN_CART.equals(item.getStatus()))
                     .map(ShoppingCartDetail::getIdProduct).filter(aLong::equals).toList();
             shoppingCartDetailDTO.setIdOrderProduct(shoppingCart.getId());
+            shoppingCartDetailDTO.setQuantity(product.getQuantity());
             shoppingCartDetailDTO.setTotalQuantity(totalQuantity.size());
             shoppingCartDetailDTO.setIdProduct(aLong);
             shoppingCartDetailDTO.setProductName(product.getProductName());
@@ -230,6 +237,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     .filter(item -> ShoppingCartDetailStatus.IN_CART.equals(item.getStatus()))
                     .map(ShoppingCartDetail::getIdProduct).filter(aLong::equals).toList();
             shoppingCartDetailDTO.setIdOrderProduct(shoppingCart.get().getId());
+            shoppingCartDetailDTO.setQuantity(product.getQuantity());
             shoppingCartDetailDTO.setTotalQuantity(totalQuantity.size());
             shoppingCartDetailDTO.setIdProduct(aLong);
             shoppingCartDetailDTO.setProductName(product.getProductName());
